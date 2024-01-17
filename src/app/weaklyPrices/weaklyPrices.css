@@ -1,0 +1,175 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+    overflow-y: scroll;
+}
+
+/* Scroll bar */
+::-webkit-scrollbar {
+    width: 20px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgb(24, 23, 23);
+}
+
+::-webkit-scrollbar-thumb {
+    background: darkgray;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: gray;
+}
+
+@layer components {
+
+    .cardDisplay {
+    @apply 
+        flex flex-col items-center
+
+        xl:flex-row
+        xl:w-3/4
+        xl:justify-around
+        xl:items-start
+    }
+
+    .title {
+        @apply
+            flex flex-col items-center
+            gap-0
+            leading-[70px]
+
+            md:p-4
+    }
+
+    .title .brand {
+        @apply
+            text-8xl
+
+            md:text-[150px]
+            md:leading-none
+    }
+
+    .title .validDates {
+         @apply
+            font-bold
+            leading-6
+
+            md:leading-none
+    }
+
+    .table {
+        @apply 
+            border-2 
+            w-[350px]
+            p-4
+
+            md:p-8
+            md:w-[600px]
+            md:min-w-[600px]
+    }
+
+    .name, .price, .heading {
+        @apply
+            flex justify-center
+    }
+
+    .name, .price {
+        @apply
+            pb-2
+            pt-2
+
+            leading-4
+
+            md:p-1.5
+            md:leading-none
+    }
+
+    .heading {
+        @apply
+            text-center 
+            font-bold
+        
+            pb-2 
+    }
+
+    .heading * {
+        @apply
+            text-xl
+
+            md:text-xl
+    }
+
+    .heading .name {
+        @apply
+            border-r-2 border-black
+    }
+
+    .name {
+        @apply 
+            text-center
+            w-3/5 border-r-2 border-white
+            pr-2
+
+            md:w-3/4 
+            md:pr-6
+    }
+
+    .price {
+        @apply 
+            flex-row items-center
+            w-2/5 pl-2
+            text-center
+
+            md:w-1/4 
+            md:pl-8
+    }
+}
+
+.card, .expandable-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.25rem;
+
+}
+
+.expandable-card {
+    max-height: 0px;
+    opacity: 0;
+}
+
+.expandable-card.show {
+    animation: expand 1s forwards;
+}
+
+.expandable-card.hide {
+    animation: minimize 1s forwards;
+}
+
+@keyframes expand {
+    0% {
+        max-height: 0px;
+        opacity: 0;
+    } 50% {
+        opacity: 0;
+    } 100% {
+        max-height: 800px;
+        opacity: 1;
+    }
+}
+
+@keyframes minimize {
+    0% {
+        max-height: 800px;
+        opacity: 1;
+    } 50% {
+        opacity: 0;
+    } 100% {
+        max-height: 0px;
+        opacity: 0;
+    }
+}

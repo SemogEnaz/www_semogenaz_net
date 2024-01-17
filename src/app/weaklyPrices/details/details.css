@@ -1,0 +1,16 @@
+@tailwind components;
+@tailwind base;
+@tailwind utilities;
+
+@layer components {
+    .card-display {
+        @apply
+            flex flex-col items-center
+            md:mt-10
+            
+            2xl:flex-row
+            2xl:flex-wrap
+            2xl:justify-center
+            2xl:items-start
+    }
+}
