@@ -1,6 +1,6 @@
 "use client"
 
-import { HomeButton } from "@/ui/button";
+import { HomeButton } from "../button";
 import { ExpandableCard } from "@/app/weaklyPrices/card";
 
 import '@/ui/arrow.css'

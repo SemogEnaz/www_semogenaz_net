@@ -4,7 +4,7 @@ import { Poppins } from 'next/font/google';
 import { Open_Sans } from 'next/font/google';
 
 import { Card } from '@/app/weaklyPrices/card'
-import { Button, TopButton } from '@/ui/button';
+import { Button, TopButton } from './button';
 import CatalogueReader, { Item } from '@/app/weaklyPrices/catalogueReader';
 
 export default function Page() {
