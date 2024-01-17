@@ -1,0 +1,22 @@
+html {
+    overflow-x: hidden;
+}
+
+/* Scroll bar */
+::-webkit-scrollbar {
+    width: 8px;
+    position: absolute
+}
+
+::-webkit-scrollbar-track {
+    background: rgb(24, 23, 23);
+}
+
+::-webkit-scrollbar-thumb {
+    background: darkgray;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: gray;
+}
