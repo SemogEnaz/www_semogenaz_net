@@ -2,7 +2,7 @@ import Waves from './backgorund/waves';
 import SubmissionForm from './forms/form';
 import Storm from './backgorund/storm';
 
-import '@/ui/scrollBar.css';
+import '../scrollBar.css';
 import '@/app/global.css';
 import '@/app/mp3/backgorund/storm.css';
 
