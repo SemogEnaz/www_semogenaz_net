@@ -105,7 +105,7 @@ function getAudioArgs(options: string) {
 
 function getVideoArgs(options: string) {
 
-    const format = (format: string) =>  `-f 'best[ext=${format}]'`;
+    const format = (format: string) =>  `-f bestvideo+bestaudio --merge-output-format ${format}`;
 
     const embed = (option: string) => option == 'embed' ? option : '';
     const subs = (option: string) => `--${embed(option)}-subs`;
