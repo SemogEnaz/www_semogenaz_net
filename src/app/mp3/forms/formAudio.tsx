@@ -43,7 +43,7 @@ export default function AudioForm({ url, setLoading, setFileName, setTitle }: Fo
 
         setHasFormat(notEmpty && notWav);
         
-        if (currentFormat == '') resetOption('embed');
+        if (!notEmpty || !notWav) resetOption('embed');
     }, [audioOptions['format'], hasFormat]);
 
     // Submition effect, calling the backend to download content
