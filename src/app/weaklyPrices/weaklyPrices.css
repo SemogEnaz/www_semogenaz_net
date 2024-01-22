@@ -72,7 +72,7 @@ html {
             md:min-w-[600px]
     }
 
-    .name, .price, .heading {
+    .name, .price, .w-heading {
         @apply
             flex justify-center
     }
@@ -88,7 +88,7 @@ html {
             md:leading-none
     }
 
-    .heading {
+    .w-heading {
         @apply
             text-center 
             font-bold
@@ -96,14 +96,14 @@ html {
             pb-2 
     }
 
-    .heading * {
+    .w-heading * {
         @apply
             text-xl
 
             md:text-xl
     }
 
-    .heading .name {
+    .w-heading .name {
         @apply
             border-r-2 border-black
     }

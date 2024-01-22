@@ -1,0 +1,104 @@
+.homePage {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 200px;
+
+    /*
+        Tropical beach top-view: https://images.unsplash.com/photo-1650509570400-90ea78a677b2?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+        Tropical river top-view: https://e0.pxfuel.com/wallpapers/570/42/desktop-wallpaper-drone-view-of-a-tropical-forest-resort-area-waterfall-in-the-jungle.jpg
+        Tropical jungle: https://img.freepik.com/free-photo/view-green-lush-rainforest-costa-rica_23-2148248823.jpg?w=996&t=st=1705563280~exp=1705563880~hmac=1ee254703f4e25423c5499e606cce31f15d4befc7349c1930dc543307270568b
+    */
+    background-image: url("../../public/city.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+.button-container {
+    width: 650px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+.button {
+    height: 50px;
+    width: 300px;
+    margin-top: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: larger;
+    color: white;
+}
+
+.heading {
+    text-align: center;
+    text-justify: center;
+    font-size: xx-large;
+}
+
+.white-glass {
+    background: rgba(255, 255, 255, 0.1); /* semi-transparent white background */
+    border-radius: 5px; /* rounded corners */
+    backdrop-filter: blur(5px); /* blurs the background */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), /* subtle outer shadow */
+                inset 0 1px 2px rgba(255, 255, 255, 0.3); /* inner highlight for depth */
+    padding: 15px; /* some padding */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* subtle border */
+}
+
+.black-glass {
+    background: rgba(0, 0, 0, 0.1); /* semi-transparent white background */
+    border-radius: 5px; /* rounded corners */
+    backdrop-filter: blur(5px); /* blurs the background */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), /* subtle outer shadow */
+                inset 0 1px 2px rgba(0, 0, 0, 0.3); /* inner highlight for depth */
+    padding: 15px; /* some padding */
+    border: 1px solid rgba(0, 0, 0, 0.3); /* subtle border */
+}
+
+.glass-button {
+    background: rgba(255, 255, 255, 0.05); /* Semi-transparent pink background */
+    border-radius: 5px; /* Rounded corners */
+    backdrop-filter: blur(5px); /* Blurs the background */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2), /* Subtle outer shadow */
+                inset 0 1px 2px rgba(255, 255, 255, 0.3); /* Inner highlight for depth */
+    padding: 10px 20px; /* Padding around the button text */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+    color: white; /* Text color */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Cursor changes to a hand symbol when hovered over */
+    transition: transform 0.3s, box-shadow 0.3s; /* Smooth transition for press effect */
+}
+
+.glass-button:hover {
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3); /* Slightly larger shadow on hover */
+}
+
+.glass-button:active {
+    transform: translateY(2px); /* Button moves down slightly when clicked */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Smaller shadow when clicked */
+}
+
+@media (max-width: 500px) {
+    .homePage {
+        height: 700px;
+        background-size: auto 100vh;
+        padding-top: 100px;
+    }
+
+    .button-container {
+        width: 100vw;
+        flex-direction: column;
+        align-items: center;
+    }
+}

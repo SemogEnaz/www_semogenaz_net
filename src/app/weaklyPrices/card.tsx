@@ -29,7 +29,7 @@ export function Card({ title, catalogue, titleClasses, addValidDates }) {
             <div className="table">
 
                 {/* Heading */}
-                <div className='heading'>
+                <div className='w-heading'>
                     <p className='name'>Items</p>
                     <p className='price'>Prices</p>
                 </div>
@@ -73,7 +73,7 @@ export function ExpandableCard({ title, catalogue, animationCSS }) {
             <div className="table">
 
                 {/* Heading */}
-                <div className='heading'>
+                <div className='w-heading'>
                     <p className='name'>Items</p>
                     <p className='price'>Prices</p>
                 </div>

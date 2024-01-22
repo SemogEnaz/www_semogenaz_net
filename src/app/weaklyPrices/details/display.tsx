@@ -3,7 +3,7 @@
 import { HomeButton } from "../button";
 import { ExpandableCard } from "@/app/weaklyPrices/card";
 
-import '@/ui/arrow.css'
+import '../arrow.css'
 import '@/app/global.css';
 import './details.css'
 

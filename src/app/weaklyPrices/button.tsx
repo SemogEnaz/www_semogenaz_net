@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
-import './button.css'
+import styles from './button.module.css'
 
 export function TopButton({ link, text }) {
     return (
         <Link 
             href={link}
-            className='button-top'
+            className={styles['button-top']}
         >
           {text}
         </Link>
@@ -17,7 +17,7 @@ export function Button({ link, text }) {
     return (
         <Link 
             href={link}
-            className='button'
+            className={styles.button}
         >
           {text}
         </Link>
