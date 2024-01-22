@@ -1,24 +1,37 @@
-import { Button } from '@/ui/button';
+import Link from 'next/link';
+
+import './homePage.css'
+
+function Buttons({ buttons, css }: { buttons: { link: string, content: string }[], css: string}) {
+
+  const Button = ({ link, content, css}: { link: string, content: string, css: string}) => {
+    return <Link className={css} href={link}>{content}</Link>
+  };
+
+  return (
+    <>
+      {buttons.map(button => (
+        <Button key={button.link} link={button.link} content={button.content} css={css} />
+      ))}
+    </>
+  );
+}
 
 export default function Page() {
-  return (
-    <div className='
-      h-[100vh] 
-      flex flex-col items-center justify-evenly
-      '>
 
-      <div className='flex flex-col items-center'>
-        <h2>Applications</h2>
-        <Button link={'/weaklyPrices'} text={"Weakly Prices"}/>
-        <Button link={'/mp3'} text={'Youtube Video Downloader'}/>
-        <Button link={'/IgConnections'} text={'Instagram mutual finder'}/>
-        <Button link={'/'} text={'News aggregator (noLink)'}/>
+  const buttons = [
+    { link: '/weaklyPrices', content: 'weaklyPrices' }, 
+    { link: '/mp3', content: '.mp3' }
+  ];
+
+  const css = 'button glass-button';
+
+  return (
+    <div className='homePage'>
+      <div className="heading">Applications</div>
+      <div className='button-container'>
+          <Buttons buttons={buttons} css={css}/>
       </div>
-      
-      <div className='flex flex-col items-center'>
-        <h2>Blogs</h2>
-      </div>
-      
     </div>
   );
 }
