@@ -10,7 +10,7 @@
         Tropical river top-view: https://e0.pxfuel.com/wallpapers/570/42/desktop-wallpaper-drone-view-of-a-tropical-forest-resort-area-waterfall-in-the-jungle.jpg
         Tropical jungle: https://img.freepik.com/free-photo/view-green-lush-rainforest-costa-rica_23-2148248823.jpg?w=996&t=st=1705563280~exp=1705563880~hmac=1ee254703f4e25423c5499e606cce31f15d4befc7349c1930dc543307270568b
     */
-    background-image: url("../../public/city.jpg");
+    background-image: url("~/public/city.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
