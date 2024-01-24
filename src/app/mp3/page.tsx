@@ -2,8 +2,6 @@ import Waves from './backgorund/waves';
 import SubmissionForm from './forms/form';
 import Storm from './backgorund/storm';
 
-import '../scrollBar.css';
-import '@/app/global.css';
 import '@/app/mp3/backgorund/storm.css';
 
 export default function Page() {
@@ -12,7 +10,7 @@ export default function Page() {
     const isThunder = true;
     
     return (
-        <div className='col-center'>
+        <div className='flex flex-col items-center'>
 
             <Storm 
                 isRain={isRain}
