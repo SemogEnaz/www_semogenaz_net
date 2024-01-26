@@ -1,10 +1,8 @@
 "use client"
 
-import { HomeButton } from "../button";
 import { ExpandableCard } from "@/app/weaklyPrices/card";
 
 import '../arrow.css'
-import '@/app/global.css';
 import './details.css'
 
 import { useState } from "react";
@@ -42,7 +40,7 @@ export default function Display({ catalogue }) {
             return (
                 <div 
                 key={card.id}
-                className="relative col-center justify-center md:min-w-[600px] ml-1 mr-1"
+                className="relative flex flex-col justify-center md:min-w-[600px] ml-1 mr-1"
                 >
                     <ExpandableCard 
                     title={card.name} 
@@ -66,7 +64,7 @@ export default function Display({ catalogue }) {
         return (
             <div
             key={card.id}
-            className="col-center md:max-w-[600px] ml-1 mr-1"
+            className="flex flex-col md:max-w-[600px] ml-1 mr-1"
             >
                 <ExpandableCard 
                     title={card.name} 
@@ -89,8 +87,7 @@ export default function Display({ catalogue }) {
 
     // Main component
     return (
-        <div className='col-center mb-10'>
-            <HomeButton />
+        <div className='flex flex-col items-center mb-10'>
             <div className="card-display">
                 {cards}
             </div>

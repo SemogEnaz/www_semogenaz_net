@@ -1,58 +1,104 @@
-import '@/app/weaklyPrices/weaklyPrices.css'
+import './card.css';
+import styles from './button.module.css';
 
-export function Card({ title, catalogue, titleClasses, addValidDates }) {
+import Link from 'next/link';
 
-    let validThruHTML = <div></div>;
-    let titleCSS = '';
+type TitleData = {
+    titleContent: string,
+    titleCss: string
+};
 
-    if (addValidDates) {
-        const validThru = getValidDates();
-        validThruHTML = <p className='validDates'>{validThru} (Every <span className={''}>Monday</span>)</p>;
-        titleCSS = 'title'
-    }
+type LinkData = {
+    link: string,
+    linkContent: string
+}
 
+export function Card({ titleData, linkData, catalogue }: {titleData: TitleData, linkData: LinkData, catalogue: any}) {
+    
     return (
+
+        <>
         <div className={`card`}>
 
-            {/* Headings */}
-            <div className={titleCSS}>
+            <BrandTitle title={titleData.titleContent} titleCss={titleData.titleCss} />
+            <Table catalogue={catalogue} />
+            <Button link={linkData.link} text={linkData.linkContent}/>
 
-                <h2 className={`${titleClasses}`}>
-                    {title}
-                </h2>
+        </div>
+        </>
+        
+    );
+}
 
-                {/* The className can be set to company color from the prop */}
-                {validThruHTML}
-            </div>
+function BrandTitle({ title, titleCss }: { title: string, titleCss: string }) {
 
-            {/* Item tables */}
-            <div className="table">
+    const validThru = getValidDates();
+    const validThruHTML = <p className='validDates'>{validThru} (Every <span className={''}>Monday</span>)</p>;
 
-                {/* Heading */}
-                <div className='w-heading'>
-                    <p className='name'>Items</p>
-                    <p className='price'>Prices</p>
-                </div>
+    return (
+        <div className='title'>
 
-                {catalogue.map((item, index) => (
-                    <div key={index} className='flex'>
+            <h2 className={`${titleCss}`}>
+                {title}
+            </h2>
 
-                        <div className='name'>
-                            <a href={item.link}>
-                            {item.name}
-                            </a>
-                        </div>
+            {/* The className can be set to company color from the prop */}
+            {validThruHTML}
 
-                        <div className='price'>
-                                <p className='text-gray-400'>${item.oldPrice}</p> 
-                                &nbsp;${item.newPrice}
-                        </div>
-
-                    </div>
-                ))}
-            </div>
         </div>
     );
+}
+
+function Table({ catalogue }) {
+
+    return (
+        <div className="table">
+
+            {/* Heading */}
+            <div className='w-heading'>
+                <p className='name'>Items</p>
+                <p className='price'>Prices</p>
+            </div>
+
+            {/* Items list */}
+            {catalogue.map((
+                item: {
+                    link: string, name: string, oldPrice: string, newPrice: string
+                }, 
+                index: number) => (
+
+            <div key={index} className='item'>
+
+                <a href={item.link} className={`
+                    name p-2
+                    border-r-4 border-r-[#000080]`}>
+                    {item.name}
+                </a>
+
+                <div className='price'>
+                    <div className="
+                        text-gray-500 line-through w-1/2 text-right
+                    ">${item.oldPrice}</div>
+                    &nbsp;
+                    <div className="w-1/2 text-left">${item.newPrice}</div>     
+                </div>
+
+            </div>
+            ))}
+
+        </div>
+    );
+}
+
+export function Button({ link, text }) {
+    return (
+        <Link 
+            href={link}
+            className={styles.button}
+        >
+          {text}
+        </Link>
+    )
 }
 
 export function ExpandableCard({ title, catalogue, animationCSS }) {

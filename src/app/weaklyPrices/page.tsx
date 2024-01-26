@@ -4,7 +4,7 @@ import { Poppins } from 'next/font/google';
 import { Open_Sans } from 'next/font/google';
 
 import { Card } from '@/app/weaklyPrices/card'
-import { Button, TopButton } from './button';
+import { Button } from './button';
 import CatalogueReader, { Item } from '@/app/weaklyPrices/catalogueReader';
 
 export default function Page() {
@@ -16,41 +16,51 @@ export default function Page() {
     const wooliesColor = 'text-[#60AB31]';
     // Another green is #099950
 
+    /**
+     * background colors:
+     *  #FFFDD0 cream
+     *  #FDFD96 pastal yellow
+     *  #FFE99A Something else, more peach
+     */
+
+    /**
+     * Text colors:
+     * darkblue: #003366
+     * navyblue: #000080
+     */
+
     return (
-        <div className='col-center'>
+        <div className='flex flex-col items-center bg-[#FFE99A] text-[#000080] h-[100%]'>
 
-            <TopButton link={"/"} text={'Home'}/>
+            <div className="page-title">
+                <div>Weakly</div>
+                <div>Prices</div>
+            </div>
 
-            <div className='cardDisplay'>
+            <div className='card-display'>
 
-                <div className='col-center'>
-                    <Card 
-                        title={"coles"} 
-                        catalogue={colesCatalogue}
-                        titleClasses={`
-                            ${poppins.className} 
-                            ${colesColor}
-                            ${'brand'}
-                        `}
-                        addValidDates={true}
-                    />
-                    <Button link={'/weaklyPrices/details/coles'} text={'View More'}/>
-                </div>
+                <Card 
+                    titleData={{
+                        titleContent: 'coles',
+                        titleCss: `${poppins.className} ${colesColor} ${'brand'}`
+                    }}
+                    linkData={{
+                        link: '/weaklyPrices/details/coles',
+                        linkContent: 'Coles Catalogue'
+                    }}
+                    catalogue={colesCatalogue}/>
 
-                <div className='col-center'>
-                    <Card
-                        title={"Woolies"}
-                        catalogue={wooliesCatalogue}
-                        titleClasses={`
-                            ${openSans.className}
-                            ${wooliesColor}
-                            ${'tracking-[-0.09em]'}
-                            ${'brand'}
-                        `}
-                        addValidDates={true}
-                    />
-                    <Button link={'/weaklyPrices/details/woolies'} text={'View More'}/>
-                </div>
+            
+                <Card
+                    titleData={{
+                        titleContent: "Woolies",
+                        titleCss: `${openSans.className} ${wooliesColor} ${'tracking-[-0.09em]'} ${'brand'}`
+                    }}
+                    linkData={{
+                        link: '/weaklyPrices/details/woolies',
+                        linkContent: 'Woolworths Catalogue'
+                    }}
+                    catalogue={wooliesCatalogue}/>
                 
             </div>
         </div>
