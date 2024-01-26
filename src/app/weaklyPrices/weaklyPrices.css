@@ -1,9 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato&family=Playfair+Display:ital@1&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 html {
     overflow-y: scroll;
 }
@@ -31,6 +27,16 @@ body {
     background: gray;
 }
 */
+
+.weaklyPrices-page {
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ffe99a;
+    color: #000080;
+    height: 100%;
+}
 
 .page-title {
     display: flex;

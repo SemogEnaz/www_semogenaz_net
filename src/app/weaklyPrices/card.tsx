@@ -1,19 +1,23 @@
 import './card.css';
 import styles from './button.module.css';
 
-import Link from 'next/link';
-
 type TitleData = {
     titleContent: string,
     titleCss: string
 };
 
 type LinkData = {
-    link: string,
+    handleClick: () => void,
     linkContent: string
 }
 
-export function Card({ titleData, linkData, catalogue }: {titleData: TitleData, linkData: LinkData, catalogue: any}) {
+type CardProps = {
+    titleData: TitleData,
+    linkData: LinkData,
+    catalogue: any
+}
+
+export function Card({ titleData, linkData, catalogue }: CardProps) {
     
     return (
 
@@ -22,11 +26,55 @@ export function Card({ titleData, linkData, catalogue }: {titleData: TitleData, 
 
             <BrandTitle title={titleData.titleContent} titleCss={titleData.titleCss} />
             <Table catalogue={catalogue} />
-            <Button link={linkData.link} text={linkData.linkContent}/>
+            <Button setState={linkData.handleClick} content={linkData.linkContent}/>
 
         </div>
         </>
         
+    );
+}
+
+export function ExpandableCard({ title, catalogue, animationCSS }) {
+
+    return (
+        <div className={`expandable-card ${animationCSS}`}>
+
+            {/* Headings */}
+            <div>
+
+                <h2 className={'text-center text-6xl p-3'}>
+                    {title}
+                </h2>
+
+            </div>
+
+            {/* Item tables */}
+            <div className="table">
+
+                {/* Heading */}
+                <div className='w-heading'>
+                    <p className='name'>Items</p>
+                    <p className='price'>Prices</p>
+                </div>
+
+                {catalogue.map((item, index) => (
+                    <div key={index} className='flex'>
+
+                        <div className='name'>
+                            <a href={item.link}>
+                            {item.name}
+                            </a>
+                        </div>
+
+                        <div className='price'>
+                                <p className='text-gray-400'>${item.oldPrice}</p> 
+                                &nbsp;${item.newPrice}
+                        </div>
+
+                    </div>
+                ))}
+            </div>
+        </div>
     );
 }
 
@@ -77,7 +125,7 @@ function Table({ catalogue }) {
 
                 <div className='price'>
                     <div className="
-                        text-gray-500 line-through w-1/2 text-right
+                        text-gray-500 font-medium w-1/2 text-right
                     ">${item.oldPrice}</div>
                     &nbsp;
                     <div className="w-1/2 text-left">${item.newPrice}</div>     
@@ -90,59 +138,14 @@ function Table({ catalogue }) {
     );
 }
 
-export function Button({ link, text }) {
+export function Button({ setState, content }: { setState: () => void, content: string}) {
     return (
-        <Link 
-            href={link}
-            className={styles.button}
-        >
-          {text}
-        </Link>
-    )
-}
-
-export function ExpandableCard({ title, catalogue, animationCSS }) {
-
-    return (
-        <div className={`expandable-card ${animationCSS}`}>
-
-            {/* Headings */}
-            <div>
-
-                <h2 className={'text-center text-6xl p-3'}>
-                    {title}
-                </h2>
-
-            </div>
-
-            {/* Item tables */}
-            <div className="table">
-
-                {/* Heading */}
-                <div className='w-heading'>
-                    <p className='name'>Items</p>
-                    <p className='price'>Prices</p>
-                </div>
-
-                {catalogue.map((item, index) => (
-                    <div key={index} className='flex'>
-
-                        <div className='name'>
-                            <a href={item.link}>
-                            {item.name}
-                            </a>
-                        </div>
-
-                        <div className='price'>
-                                <p className='text-gray-400'>${item.oldPrice}</p> 
-                                &nbsp;${item.newPrice}
-                        </div>
-
-                    </div>
-                ))}
-            </div>
+        <div 
+            onClick={setState}
+            className={styles.button}>
+          {content}
         </div>
-    );
+    )
 }
 
 function getValidDates(): string {
