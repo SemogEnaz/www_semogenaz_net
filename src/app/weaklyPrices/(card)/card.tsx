@@ -113,11 +113,20 @@ function Table({ apiArg }: { apiArg: string }) {
     );
 
     const Loading = () => {
+
         return (
-            <div className="ring-container">
+            <div className="center">
+                <div className='font-bold text-3xl'>Retriving Data</div>
+            </div>
+        );
+        
+        /*
+        return (
+            <div className="center">
                 <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
             </div>
         );
+        */
     }
 
     const mockItems = [
@@ -150,9 +159,11 @@ function Table({ apiArg }: { apiArg: string }) {
         </div> :
 
         <div className='card-content skeleton'>
-            <Heading />
-            <Items catalogue={makeMockObjs(mockItems)} />
-            <Loading />
+            <div className="wave-container">
+                <Heading />
+                <Items catalogue={makeMockObjs(mockItems)} />
+                <Loading />
+            </div>
         </div>
     );
 }

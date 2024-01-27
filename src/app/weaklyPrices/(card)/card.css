@@ -68,7 +68,6 @@
     overflow: hidden;
     width: 500px;
     padding: 10px;
-    padding-bottom: 20px;
 
     border: 6px solid #000080;
     border-right: 0px;
@@ -99,9 +98,12 @@
         rgba(255, 255, 255, 0), 
         rgba(255, 233, 154, 1)
     ); /* Example gradient */
-    backdrop-filter: blur(3px); /* Apply blur effect */
 
     z-index: 1; /* Ensures the overlay is above the content */
+}
+
+.card-content.end-height::before {
+    backdrop-filter: blur(3px);
 }
 
 .card-content.end-height::before {
@@ -185,7 +187,7 @@
     width: 33%;
 }
 
-.ring-container {
+.center {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -228,3 +230,36 @@
       transform: rotate(360deg);
     }
   }
+
+  @keyframes waveAnimation {
+    0% {
+        background-position: 0% 0%;
+    } 100% {
+        background-position: 200px 0%;
+    }
+}
+
+.wave-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.wave-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+
+    background: repeating-linear-gradient(
+        -45deg,
+        rgba(63, 135, 166, 1),
+        rgba(235, 248, 225, 0) 106.05px,
+        rgba(246, 156, 60, 0.75) 141.4px
+    ); 
+    background-size: 200px 100%;
+    animation: waveAnimation 2s linear infinite;
+    backdrop-filter: blur(3px);
+}
