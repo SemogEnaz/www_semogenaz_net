@@ -107,6 +107,7 @@
 }
 
 .card-content.end-height::before {
+    pointer-events: none;
     animation: invisible 0.25s 0.9s ease-in-out forwards;
 }
 
