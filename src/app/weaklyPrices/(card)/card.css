@@ -61,8 +61,11 @@
     font-weight: bolder;
 }
 
-.table {
-    height: 435px;
+.card-content {
+    /* 325 is the smallest height of a card */
+    min-height: 200px;
+    max-height: 0px;
+    overflow: hidden;
     width: 500px;
     padding: 10px;
     padding-bottom: 20px;
@@ -72,22 +75,63 @@
     border-left: 0px;
     border-radius: 6px;
 
+    position: relative;
+
     transition: 
-        height 1s ease-in-out,
+        max-height 1s ease-in-out;
 }
 
-.table.end-height {
-    height: 0px;
+.card-content.end-height {
+    max-height: 500px;
 }
 
-/*
-    animation: show 1s ease-in-out forwards;
-*/
+/* Pseudo element code taken from chatGPT*/
+.card-content.skeleton::before, .card-content.end-height::before {
+    content: ''; /* Required for pseudo-elements */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 
-.table * {
-    opacity: 0;
-    animation: 
-        visible 0.5s 1s ease-in-out forwards;
+    background: linear-gradient(
+        to bottom, 
+        rgba(255, 255, 255, 0), 
+        rgba(255, 233, 154, 1)
+    ); /* Example gradient */
+    backdrop-filter: blur(3px); /* Apply blur effect */
+
+    z-index: 1; /* Ensures the overlay is above the content */
+}
+
+.card-content.end-height::before {
+    animation: clear2 0.25s 0.9s ease-in-out forwards;
+}
+
+@keyframes clear2 {
+    from {
+        opacity: 1;
+    } to {
+        opacity: 0;
+    }
+}
+
+@keyframes clear {
+    from {
+        backdrop-filter: blur(2px);
+        background: linear-gradient(
+            to bottom, 
+            rgba(255, 255, 255, 0),
+            rgba(255, 233, 154, 1)
+        );
+    } to { 
+        backdrop-filter: blur(0px); 
+        background: linear-gradient(
+            to bottom, 
+            rgba(255, 255, 255, 0), 
+            rgba(255, 233, 154, 0)
+        );
+    }
 }
 
 .w-heading {
@@ -107,10 +151,6 @@
     justify-content: center;
 
     font-weight: 600;
-}
-
-@keyframes show {
-    to { max-height: 600px;}
 }
 
 @keyframes visible {
@@ -144,3 +184,47 @@
 .price {
     width: 33%;
 }
+
+.ring-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+}
+
+.lds-ring {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+  }
+  .lds-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border: 8px solid #000080;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: #000080 transparent transparent transparent;
+  }
+  .lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+  }
+  .lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+  }
+  .lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+  }
+  @keyframes lds-ring {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }

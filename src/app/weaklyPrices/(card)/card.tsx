@@ -112,24 +112,52 @@ function Table({ apiArg }: { apiArg: string }) {
         ))
     );
 
-    /*
-    return (
-        <div className="table h-[410px]"></div>
-    );
-    */
+    const Loading = () => {
+        return (
+            <div className="ring-container">
+                <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
+            </div>
+        );
+    }
+
+    const mockItems = [
+        ['This is a mock item index 100', '12', '34'],
+        ['Needed for the loading screen of my app', '45', '56.7'],
+        ['Just figured out height animation', '78', '89'],
+        ['What a pain in the ass XD', '14.4', '4']
+    ]
+
+    const makeMockObjs = (mockItems: string[][]) => {
+        let objArr = [];
+        for (let i = 0; i < mockItems.length; i++) {
+            const attrs = mockItems[i];
+
+            objArr.push({
+                link: '', 
+                name: attrs[0], 
+                oldPrice: attrs[1],
+                newPrice: attrs[2]
+            });
+        }
+        return objArr;
+    }
 
     return (
         catalogue != undefined && catalogue.length > 0 ?
-        <div className='table end-height'>
+        <div className='card-content end-height'>
             <Heading />
             <Items catalogue={catalogue} />
         </div> :
-        // Skleton goes here
-        <div className="table start-height"></div>
+
+        <div className='card-content skeleton'>
+            <Heading />
+            <Items catalogue={makeMockObjs(mockItems)} />
+            <Loading />
+        </div>
     );
 }
 
-export function Button({ setState, content }: { setState: () => void, content: string}) {
+function Button({ setState, content }: { setState: () => void, content: string}) {
     return (
         <div 
             onClick={setState}
