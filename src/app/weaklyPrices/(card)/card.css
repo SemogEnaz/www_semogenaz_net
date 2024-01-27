@@ -52,7 +52,7 @@
 }
 
 .brand {
-    text-shadow: rgba(0, 0, 0, 0.4) 0px 5px 15px;
+    text-shadow: rgba(0, 0, 0, 0.5) 0px 5px 15px;
     font-size: 150px;
     line-height: 120px;
 }
@@ -107,17 +107,18 @@
 }
 
 .card-content.end-height::before {
-    animation: clear2 0.25s 0.9s ease-in-out forwards;
+    animation: invisible 0.25s 0.9s ease-in-out forwards;
 }
 
-@keyframes clear2 {
-    from {
-        opacity: 1;
-    } to {
-        opacity: 0;
-    }
+/* Since the pseudo element is used to blur and create the 
+    gradient, we make it invisible, effectively making the
+    background effects fade as well */
+@keyframes invisible {
+    from { opacity: 1; } 
+    to { opacity: 0; }
 }
 
+/* Removing effects by manualy animating properties */
 @keyframes clear {
     from {
         backdrop-filter: blur(2px);
@@ -136,7 +137,7 @@
     }
 }
 
-.w-heading {
+.w-heading, .item, .name, .price {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -147,26 +148,9 @@
     font-size: 25px;
 }
 
-.item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.item { font-weight: 600; }
 
-    font-weight: 600;
-}
-
-@keyframes visible {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-.name, .price {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    height: 100%;
-}
+.name, .price { height: 100%; }
 
 .name {
     width: 66%;
@@ -183,9 +167,7 @@
     background-color: #000080;
 }
 
-.price {
-    width: 33%;
-}
+.price { width: 33%; }
 
 .center {
     position: absolute;
@@ -193,73 +175,4 @@
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 2;
-}
-
-.lds-ring {
-    display: inline-block;
-    position: relative;
-    width: 80px;
-    height: 80px;
-  }
-  .lds-ring div {
-    box-sizing: border-box;
-    display: block;
-    position: absolute;
-    width: 64px;
-    height: 64px;
-    margin: 8px;
-    border: 8px solid #000080;
-    border-radius: 50%;
-    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    border-color: #000080 transparent transparent transparent;
-  }
-  .lds-ring div:nth-child(1) {
-    animation-delay: -0.45s;
-  }
-  .lds-ring div:nth-child(2) {
-    animation-delay: -0.3s;
-  }
-  .lds-ring div:nth-child(3) {
-    animation-delay: -0.15s;
-  }
-  @keyframes lds-ring {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-
-  @keyframes waveAnimation {
-    0% {
-        background-position: 0% 0%;
-    } 100% {
-        background-position: 200px 0%;
-    }
-}
-
-.wave-container {
-    position: relative;
-    overflow: hidden;
-}
-
-.wave-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1;
-
-    background: repeating-linear-gradient(
-        -45deg,
-        rgba(63, 135, 166, 1),
-        rgba(235, 248, 225, 0) 106.05px,
-        rgba(246, 156, 60, 0.75) 141.4px
-    ); 
-    background-size: 200px 100%;
-    animation: waveAnimation 2s linear infinite;
-    backdrop-filter: blur(3px);
 }
