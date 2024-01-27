@@ -2,8 +2,10 @@ import CatalogueReader, { Item } from './reader';
 
 export default function handler(req, res) {
 
-  const colesCatalogue = getCuratedColes(2);
-  const wooliesCatalogue = getCuratedWoolies(4);
+  const { brand } = req.query;
+
+  const catalogue = 
+    brand == 'coles' ? getCuratedColes(2) : getCuratedWoolies(4);
 
   const date = () => {
     const date = new Date();
@@ -25,14 +27,9 @@ export default function handler(req, res) {
     return `${hours}:${min}:${sec}`;
   }
 
-  console.log(`${date()} ${time()} weaklyPrices: Getting catalogue summaries.`);
+  console.log(`${date()} ${time()} weaklyPrices: Sending ${brand} catalogue summary.`);
 
-  res.status(200).json({
-    summaries: {
-      coles: colesCatalogue,
-      woolworths: wooliesCatalogue
-    }
-  })
+  res.status(200).json({ catalogue: catalogue })
 }
 
 function getCuratedColes(itemsPerCatagory: number) {

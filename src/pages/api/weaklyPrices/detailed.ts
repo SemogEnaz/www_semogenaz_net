@@ -3,11 +3,11 @@ import CatalogueReader, {Item} from "./reader";
 
 export default function handler(req, res) {
 
-    const { brand } = req.query;
-    const itemCount = 5;
+    const { brand, count } = req.query;
+    const itemCount = !count ? 10 : count;
 
     const catalogue = 
-        brand == 'coles' ? 
+        brand == 'coles' ?
         getCatalogueSummary(itemCount, 'coles_catalogue') :
         getCatalogueSummary(itemCount, 'woolies_catalogue');
 

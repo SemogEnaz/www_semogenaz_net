@@ -16,7 +16,7 @@ const openSans = Open_Sans({
     subsets: ['latin'],
 });
 
-import { Card } from '@/app/weaklyPrices/card'
+import { BrandCard, ExpandableCard } from './(card)/card'
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
 
@@ -65,21 +65,6 @@ export default function Page() {
 
 function MainPage({ setCatalogueName }: { setCatalogueName: (name: string) => void} ) {
 
-    const [summaries, setSummaries] = useState({});
-    const [isLoading, setLoading] = useState(true)
-
-    useEffect(() => {
-
-        const getSummaries = async () => {
-            const response = await fetch('/api/weaklyPrices/summary');
-            const data = await response.json();
-            setSummaries(data.summaries);
-            setLoading(false);
-        }
-
-        getSummaries();
-    }, []);
-
     const colesColor = 'text-[#ed1c22]';
     const wooliesColor = 'text-[#60AB31]';
     // Another green is #099950
@@ -105,11 +90,9 @@ function MainPage({ setCatalogueName }: { setCatalogueName: (name: string) => vo
         setCatalogueName('woolworths');
     }
 
-    if (isLoading) return <LoadingPage />;
-
     return (
         <>
-        <Card 
+        <BrandCard 
             titleData={{
                 titleContent: 'coles',
                 titleCss: `${poppins.className} ${colesColor} ${'brand'}`
@@ -118,10 +101,10 @@ function MainPage({ setCatalogueName }: { setCatalogueName: (name: string) => vo
                 handleClick: moreColes,
                 linkContent: 'Coles Catalogue'
             }}
-            catalogue={summaries.coles}/>
+            apiArg={'summary?brand=coles'}/>
 
     
-        <Card
+        <BrandCard
             titleData={{
                 titleContent: "Woolies",
                 titleCss: `${openSans.className} ${wooliesColor} ${'tracking-[-0.09em]'} ${'brand'}`
@@ -130,7 +113,7 @@ function MainPage({ setCatalogueName }: { setCatalogueName: (name: string) => vo
                 handleClick: moreWoolworths,
                 linkContent: 'Woolworths Catalogue'
             }}
-            catalogue={summaries.woolworths}/>
+            apiArg={`summary?brand=woolworths`}/>
         </>
       );
 }
@@ -144,7 +127,7 @@ function DetailsPage({ states }: { states: any }) {
     useEffect(() => {
 
         const getCatalogue = async () => {
-            const response = await fetch(`/api/weaklyPrices/catalogue?brand=${catalogueName}`);
+            const response = await fetch(`/api/weaklyPrices/detailed?brand=${catalogueName}`);
             const data = await response.json();
             setCatalogue(data.catalogue);
             setLoading(false);
@@ -160,19 +143,15 @@ function DetailsPage({ states }: { states: any }) {
     if (isLoading) return <LoadingPage />;
 
     return (
-        <div>
-            <Button setState={toMain} content={'Back'}/>
-            <Card
-                titleData={{
-                    titleContent: '',
-                    titleCss: ''
-                }}
-                linkData={{
-                    handleClick: toMain,
-                    linkContent: 'Back'
-                }}
-                catalogue={catalogue[0].items}/>
-        </div>
+
+        <>
+        <Button setState={toMain} content={'Back'}/>
+        <ExpandableCard
+            title={catalogue[catalogue.length - 4].name}
+            catalogue={catalogue[catalogue.length - 4].items}
+            animationCSS='show' />
+        </>
+            
     );
 }
 
