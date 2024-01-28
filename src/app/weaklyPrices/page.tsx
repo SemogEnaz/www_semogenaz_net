@@ -119,7 +119,7 @@ function DetailsPage({ states }: { states: any }) {
 
     const { catalogueName, setCatalogueName } = states;
     const [catagories, setCatagories] = useState([]);
-    const [cardIndex, setIndex] = useState(0);
+    const [cardIndex, setIndex] = useState(6);
     
 
     console.log(cardIndex);
@@ -173,7 +173,7 @@ function DetailsPage({ states }: { states: any }) {
     return (
         <>
             <Button setState={toMain} content={'Back'}/>
-            <div className="flex items-stretch">
+            <div className="flex mt-[10px]">
                 <Navigator />
                 <Display />
             </div>
