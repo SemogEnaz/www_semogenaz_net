@@ -19,9 +19,8 @@ export default class CatalogueReader {
             const data = fs.readFileSync(filePath, 'utf8');
             return this._parseData(data);
         } catch (err) {
-            console.error(err);
+            throw err;
         }
-        return [];
     }
     
     _parseData(data: string): Item[] {

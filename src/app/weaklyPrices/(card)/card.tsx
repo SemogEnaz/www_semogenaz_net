@@ -1,4 +1,6 @@
 import './card.css';
+import './lds-ring.css';
+import './lds-wave.css';
 import styles from '../button.module.css';
 
 import { useState, useEffect } from 'react';
@@ -23,10 +25,13 @@ export function BrandCard({ titleData, linkData, apiArg }: CardProps) {
     
     // Get brandName instead of catalogue, await for fetch in table?
 
+    const validThru = getValidDates();
+    const validThruHTML = <p className='validDates'>{validThru} (Every <span className={''}>Monday</span>)</p>;
+
     return (
         <>
         <div className={`card`}>
-            <BrandTitle title={titleData.titleContent} titleCss={titleData.titleCss} />
+            <Title title={titleData.titleContent} titleCSS={titleData.titleCss} validDates={validThruHTML}/>
             <Table apiArg={apiArg} />
             <Button setState={linkData.handleClick} content={linkData.linkContent}/>
         </div>
@@ -34,47 +39,46 @@ export function BrandCard({ titleData, linkData, apiArg }: CardProps) {
     );
 }
 
-export function ExpandableCard({ title, catalogue, animationCSS }) {
+export function ExpandableCard({ title, apiArg, animationCSS }) {
 
     return (
         <div className={`expandable-card ${animationCSS}`}>
-
-            <BrandTitle title={title} titleCss='text-7xl font-medium' />
-            <Table catalogue={catalogue} />
-
+            <Title title={title} titleCSS='text-7xl font-medium' validDates={null} />
+            <Table apiArg={apiArg} />
         </div>
     );
 }
 
-function BrandTitle({ title, titleCss }: { title: string, titleCss: string }) {
+const Title = ({ title, titleCSS, validDates }: 
+    {title: string, titleCSS: string, validDates: null | JSX.Element}) => (
 
-    const validThru = getValidDates();
-    const validThruHTML = <p className='validDates'>{validThru} (Every <span className={''}>Monday</span>)</p>;
-
-    return (
-        <div className='title'>
-
-            <h2 className={`${titleCss}`}>
+        <div className="title">
+            <h2 className={titleCSS}>
                 {title}
             </h2>
-
-            {/* The className can be set to company color from the prop */}
-            {validThruHTML}
-
+            {validDates}
         </div>
-    );
-}
+)
 
 function Table({ apiArg }: { apiArg: string }) {
 
     const [catalogue, setCatalogue] = useState([]);
+    const [isError, setError] = useState(false);
 
     useEffect(() => {
 
         fetch(`/api/weaklyPrices/${apiArg}`)
-            .then(res => res.json())
-            .then(data => data.catalogue)
-            .then(catalogue => setCatalogue(catalogue));
+            .then(res => {
+                if (!res.ok) res.json()
+                    .then((data) => {
+                        setError(true);
+                        return {summary: []};
+                    });
+                else
+                    return res.json();
+            })
+            .then(data => data.summary)
+            .then(summary => setCatalogue(summary));
 
     }, [apiArg]);
 
@@ -112,11 +116,11 @@ function Table({ apiArg }: { apiArg: string }) {
         ))
     );
 
-    const Loading = () => {
+    const Loading = ({ message }: { message: string }) => {
 
         return (
             <div className="center">
-                <div className='font-bold text-3xl'>Retriving Data</div>
+                <div className='font-bold text-3xl drop-shadow-md'>{`${message}`}</div>
             </div>
         );
         
@@ -162,7 +166,7 @@ function Table({ apiArg }: { apiArg: string }) {
             <div className="wave-container">
                 <Heading />
                 <Items catalogue={makeMockObjs(mockItems)} />
-                <Loading />
+                <Loading message={isError ? `API Error` : `Retriving Data`} />
             </div>
         </div>
     );

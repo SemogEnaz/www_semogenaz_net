@@ -48,12 +48,9 @@ export default function Page() {
 
             <div className="card-display">
                 {
-                    catalogueName == '' ? 
-                    <MainPage setCatalogueName={setCatalogueName} /> :
-
-                    catalogueName == 'coles' ?
+                    catalogueName ? 
                     <DetailsPage states={states} /> :
-                    <DetailsPage states={states} />
+                    <MainPage setCatalogueName={setCatalogueName} />
                 }
                 
             </div>
@@ -120,38 +117,33 @@ function MainPage({ setCatalogueName }: { setCatalogueName: (name: string) => vo
 
 function DetailsPage({ states }: { states: any }) {
 
-    const [isLoading, setLoading] = useState(true);
-    const [catalogue, setCatalogue] = useState([]);
     const { catalogueName, setCatalogueName } = states;
+    const [catagories, setCatagories] = useState([]);
 
     useEffect(() => {
-
-        const getCatalogue = async () => {
-            const response = await fetch(`/api/weaklyPrices/detailed?brand=${catalogueName}`);
-            const data = await response.json();
-            setCatalogue(data.catalogue);
-            setLoading(false);
-        }
-
-        getCatalogue();
-    }, [catalogueName])
+        fetch(`/api/weaklyPrices/detailed?brand=${catalogueName}`)
+            .then(res => res.json())
+            .then(data => setCatagories(data.catagories))
+    }, [catalogueName]);
 
     const toMain = () => {
         setCatalogueName('');
     }
 
-    if (isLoading) return <LoadingPage />;
+    if (!catagories) return <div>Loading catagory names...</div>;
 
     return (
-
         <>
-        <Button setState={toMain} content={'Back'}/>
-        <ExpandableCard
-            title={catalogue[catalogue.length - 4].name}
-            catalogue={catalogue[catalogue.length - 4].items}
-            animationCSS='show' />
+            <Button setState={toMain} content={'Back'}/>
+
+            {catagories.map((catagory, index) => (
+                <ExpandableCard
+                    key={index}
+                    title={`${catagory}`}
+                    apiArg={`detailed?brand=coles&category=${encodeURIComponent(catagory)}`}
+                    animationCSS='show' />
+            ))}
         </>
-            
     );
 }
 

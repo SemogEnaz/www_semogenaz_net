@@ -1,6 +1,8 @@
+import { NextApiRequest, NextApiResponse } from 'next';
+
 import CatalogueReader, { Item } from './reader';
 
-export default function handler(req, res) {
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
   const { brand } = req.query;
 
@@ -29,7 +31,7 @@ export default function handler(req, res) {
 
   console.log(`${date()} ${time()} weaklyPrices: Sending ${brand} catalogue summary.`);
 
-  res.status(200).json({ catalogue: catalogue })
+  res.status(200).json({ summary: catalogue })
 }
 
 function getCuratedColes(itemsPerCatagory: number) {
@@ -61,7 +63,6 @@ function getCuratedWoolies(itemsPerCatagory: number) {
 function getCuratedCatalogue(catagories: string[], dir: string, itemsPerCatagory: number) {
 
   let allItems: Item[] = [];
-
   const reader = new CatalogueReader();
 
   for (const catagory of catagories) {
