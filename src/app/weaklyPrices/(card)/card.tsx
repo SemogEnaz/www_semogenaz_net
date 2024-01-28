@@ -15,13 +15,13 @@ type LinkData = {
     linkContent: string
 }
 
-type CardProps = {
+type BrandCardProps = {
     titleData: TitleData,
     linkData: LinkData,
     apiArg: string
 }
 
-export function BrandCard({ titleData, linkData, apiArg }: CardProps) {
+export function BrandCard({ titleData, linkData, apiArg }: BrandCardProps) {
     
     // Get brandName instead of catalogue, await for fetch in table?
 
@@ -39,11 +39,11 @@ export function BrandCard({ titleData, linkData, apiArg }: CardProps) {
     );
 }
 
-export function ExpandableCard({ title, apiArg, animationCSS }) {
+export function DetailsCard({ title, apiArg, cardCSS }: { title: string, apiArg: string, cardCSS: string}) {
 
     return (
-        <div className={`expandable-card ${animationCSS}`}>
-            <Title title={title} titleCSS='text-7xl font-medium' validDates={null} />
+        <div className={`card ${cardCSS}`}>
+            <Title title={title} titleCSS='text-5xl font-medium' validDates={null} />
             <Table apiArg={apiArg} />
         </div>
     );

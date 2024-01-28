@@ -16,7 +16,7 @@ const openSans = Open_Sans({
     subsets: ['latin'],
 });
 
-import { BrandCard, ExpandableCard } from './(card)/card'
+import { BrandCard, DetailsCard } from './(card)/card'
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
 
@@ -119,36 +119,66 @@ function DetailsPage({ states }: { states: any }) {
 
     const { catalogueName, setCatalogueName } = states;
     const [catagories, setCatagories] = useState([]);
+    const [cardIndex, setIndex] = useState(0);
+    
+
+    console.log(cardIndex);
 
     useEffect(() => {
         fetch(`/api/weaklyPrices/detailed?brand=${catalogueName}`)
             .then(res => res.json())
             .then(data => setCatagories(data.catagories))
+
+        
     }, [catalogueName]);
 
     const toMain = () => {
         setCatalogueName('');
     }
 
-    if (!catagories) return <div>Loading catagory names...</div>;
+    if (catagories.length == 0) return <div>Loading catagory names...</div>;
+
+    const Display = () => (
+        <div className="details-cards">
+            {catagories.map((catagory, index) => (
+                <DetailsCard
+                    key={index}
+                    title={`${catagory}`}
+                    apiArg={`detailed?brand=${catalogueName}&category=${encodeURIComponent(catagory)}`}
+                    cardCSS={`details ${index == cardIndex ? 'show' : ''}`} />
+            ))}
+        </div>
+    );
+
+    const Navigator = () => {
+
+        const Selector = ({category, index}: { category: string, index: number }): JSX.Element => (
+            <div className="selector" onClick={() => setIndex(index)}>
+                {category}
+            </div>
+        )
+
+        return (
+            <div className="nav-panel">
+                {catagories.map((category, index) => (
+                    <Selector
+                        key={index}
+                        category={category}
+                        index={index} />
+                ))}
+            </div>
+        );
+    };
 
     return (
         <>
             <Button setState={toMain} content={'Back'}/>
-
-            {catagories.map((catagory, index) => (
-                <ExpandableCard
-                    key={index}
-                    title={`${catagory}`}
-                    apiArg={`detailed?brand=coles&category=${encodeURIComponent(catagory)}`}
-                    animationCSS='show' />
-            ))}
+            <div className="flex items-stretch">
+                <Navigator />
+                <Display />
+            </div>
         </>
     );
-}
-
-function LoadingPage() {
-    return <div className="">Loading</div>
 }
 
 export function Button({ setState, content }: { setState: () => void, content: string}) {

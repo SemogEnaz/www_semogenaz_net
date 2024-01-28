@@ -55,4 +55,56 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    padding-bottom: 50px;
+}
+
+.details-cards {
+    display: flex;
+    flex-direction: row;
+}
+
+.details-cards > * {
+    margin-right: -500px; /* Adjust the negative margin as needed */
+    z-index: 1;
+    position: relative;
+}
+
+.details-cards > :last-child {
+    margin-right: 0; /* No negative margin for the last child */
+}
+
+.nav-panel {
+    width: 200px;
+    height: 480px;
+    overflow-y: auto;
+
+    background: #FFFFF0;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+    margin-right: 40px;
+    margin-top: 60px;
+    padding: 10px;
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.selector {
+    width: auto;
+    height: 35px;
+    line-height: 35px;
+
+    background: #000080;
+    color: white;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+    margin: 5px;
+    border-radius: 5px;
+
+    text-justify: center;
+    text-align: center;
+
+    cursor: pointer;
 }
