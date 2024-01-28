@@ -2,17 +2,20 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 50px;
+
+    margin-bottom: 40px;
 }
 
 .details {
-    padding-top: 0px;
+    visibility: hidden;
 
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
 }
 
 .show {
+    visibility: visible;
+
     opacity: 1;
 }
 
@@ -22,6 +25,13 @@
     align-items: center;
 
     margin-bottom: 5px;
+}
+
+.title > h2 {
+    max-width: 500px;
+
+    word-wrap: break-word;
+    text-align: center;
 }
 
 .brand {
@@ -69,7 +79,7 @@
     background: linear-gradient(
         to bottom, 
         rgba(255, 255, 255, 0), 
-        rgba(255, 233, 154, 1)
+        #D9B99B
     ); /* Example gradient */
 
     z-index: 1; /* Ensures the overlay is above the content */

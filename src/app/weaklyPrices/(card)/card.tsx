@@ -66,7 +66,6 @@ function Table({ apiArg }: { apiArg: string }) {
     const [isError, setError] = useState(false);
 
     useEffect(() => {
-
         fetch(`/api/weaklyPrices/${apiArg}`)
             .then(res => {
                 if (!res.ok) res.json()
@@ -79,7 +78,6 @@ function Table({ apiArg }: { apiArg: string }) {
             })
             .then(data => data.summary)
             .then(summary => setCatalogue(summary));
-
     }, [apiArg]);
 
     const Heading = () => (
@@ -92,7 +90,7 @@ function Table({ apiArg }: { apiArg: string }) {
     const Items = ({ catalogue }: any) => (
         catalogue.map((
             item: {
-                link: string, name: string, oldPrice: string, newPrice: string
+                name: string, oldPrice: string, newPrice: string, link: string
             }, 
             index: number) => (
 
@@ -123,14 +121,6 @@ function Table({ apiArg }: { apiArg: string }) {
                 <div className='font-bold text-3xl drop-shadow-md'>{`${message}`}</div>
             </div>
         );
-        
-        /*
-        return (
-            <div className="center">
-                <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
-            </div>
-        );
-        */
     }
 
     const mockItems = [
@@ -146,7 +136,7 @@ function Table({ apiArg }: { apiArg: string }) {
             const attrs = mockItems[i];
 
             objArr.push({
-                link: '', 
+                link: '',
                 name: attrs[0], 
                 oldPrice: attrs[1],
                 newPrice: attrs[2]
@@ -160,8 +150,8 @@ function Table({ apiArg }: { apiArg: string }) {
         <div className='card-content end-height'>
             <Heading />
             <Items catalogue={catalogue} />
-        </div> :
-
+        </div> 
+        :
         <div className='card-content skeleton'>
             <div className="wave-container">
                 <Heading />

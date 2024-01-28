@@ -121,15 +121,10 @@ function DetailsPage({ states }: { states: any }) {
     const [catagories, setCatagories] = useState([]);
     const [cardIndex, setIndex] = useState(6);
     
-
-    console.log(cardIndex);
-
     useEffect(() => {
         fetch(`/api/weaklyPrices/detailed?brand=${catalogueName}`)
             .then(res => res.json())
             .then(data => setCatagories(data.catagories))
-
-        
     }, [catalogueName]);
 
     const toMain = () => {
@@ -138,7 +133,17 @@ function DetailsPage({ states }: { states: any }) {
 
     if (catagories.length == 0) return <div>Loading catagory names...</div>;
 
-    const Display = () => (
+    const DisplayOne = () => {
+        const title = catagories[cardIndex];
+        const apiArg = `detailed?brand=${catalogueName}&category=${encodeURIComponent(title)}`;
+        const cardCSS = `details show`;
+
+        return <DetailsCard title={title} apiArg={apiArg} cardCSS={cardCSS}/>
+    };
+
+    const DisplayAll = () => (
+
+        /* Rendering all the cards */
         <div className="details-cards">
             {catagories.map((catagory, index) => (
                 <DetailsCard
@@ -153,19 +158,28 @@ function DetailsPage({ states }: { states: any }) {
     const Navigator = () => {
 
         const Selector = ({category, index}: { category: string, index: number }): JSX.Element => (
-            <div className="selector" onClick={() => setIndex(index)}>
+            <div className="catagory" onClick={() => setIndex(index)}>
                 {category}
             </div>
         )
 
-        return (
-            <div className="nav-panel">
+        const CatagoryPanel = () => (
+            <>
+            <div className="catagory-title">Catagories</div>
+            <div className="catagory-panel">
                 {catagories.map((category, index) => (
                     <Selector
                         key={index}
                         category={category}
                         index={index} />
                 ))}
+            </div>
+            </>
+        );
+
+        return (
+            <div className="nav-panel">
+                <CatagoryPanel />
             </div>
         );
     };
@@ -175,7 +189,7 @@ function DetailsPage({ states }: { states: any }) {
             <Button setState={toMain} content={'Back'}/>
             <div className="flex mt-[10px]">
                 <Navigator />
-                <Display />
+                <DisplayOne />
             </div>
         </>
     );
