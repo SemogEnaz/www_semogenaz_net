@@ -10,32 +10,42 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         encodedCategory && !Array.isArray(encodedCategory) ? 
         decodeURIComponent(encodedCategory) : undefined;
 
-    // Error if url is not valid
-    if (!brand) 
-    res.status(400).json({ 
-        error: `Include brand in request
-                eg:
-                \turl?brand=coles (returns catagories for coles)
-                \turl?brand=coles&catagory=[x] (returns items summary for x)
-                \turl?brand=coles&catagory=[x]&count=12 (top 12 price drops, decending)`
-    });
+    //console.log('\nCall to weaklyPrices/detailed api\n');
 
+    // Error if url is not valid
+    if (!brand) {
+        res.status(400).json({ 
+            error: `Include brand in request
+                    eg:
+                    \turl?brand=coles (returns catagories for coles)
+                    \turl?brand=coles&catagory=[x] (returns items summary for x)
+                    \turl?brand=coles&catagory=[x]&count=12 (top 12 price drops, decending)`
+        });
+        return;
+    }
     const colesDir = `coles_catalogue`;
     const woolieDir = `woolies_catalogue`;
 
     // Return catagory list for catalogue
     // eg: url?brand=coles returns coles catagories
-    if (brand && !category) 
-        return res.status(200).json({ 
-            catagories: brand == 'coles' ?
+    if (brand && !category) {
+        const files = 
+            brand == 'coles' ?
             getCatagoryNames(colesDir) :
             getCatagoryNames(woolieDir)
-        });
+
+        console.log(`Getting catagories for ${brand}:\n\t${files}\n`);
+        res.status(200).json({ catagories: files});
+        return;
+    }
 
     // Return catagory array for catalogue
     // eg: url?brand=coles&catagory=x    
-    if (!category || category == ' ') 
-        return res.status(400).json({ error: `Catagory ${category} is invalid!` });
+    if (!category || category == ' ') {
+        console.log(`Catagory ${category} is invalid!`);
+        res.status(400).end();
+        return;
+    }
 
     const itemCount = !count || isNaN(Number(count)) ? 10 : Number(count);
 
@@ -48,9 +58,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
         console.log(`Getting ${brand} page for ${category}`);
         res.status(200).json({ summary: summary });
+        return;
     } catch (error) {
         console.log(`Catagory name ${category} is invlaid for ${brand}!`);
-        res.status(500);
+        res.status(500).end();
+        return;
     }
 }
 

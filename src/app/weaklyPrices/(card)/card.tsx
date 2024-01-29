@@ -68,11 +68,10 @@ function Table({ apiArg }: { apiArg: string }) {
     useEffect(() => {
         fetch(`/api/weaklyPrices/${apiArg}`)
             .then(res => {
-                if (!res.ok) res.json()
-                    .then((data) => {
+                if (!res.ok) {
                         setError(true);
                         return {summary: []};
-                    });
+                }
                 else
                     return res.json();
             })

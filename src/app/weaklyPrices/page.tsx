@@ -134,7 +134,10 @@ function DetailsPage({ states }: { states: any }) {
     if (catagories.length == 0) return <div>Loading catagory names...</div>;
 
     const DisplayOne = () => {
-        const title = catagories[cardIndex];
+        const title = catagories [
+            cardIndex > catagories.length ? 
+            0 : cardIndex
+        ];
         const apiArg = `detailed?brand=${catalogueName}&category=${encodeURIComponent(title)}`;
         const cardCSS = `details show`;
 

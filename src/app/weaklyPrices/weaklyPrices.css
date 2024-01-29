@@ -66,6 +66,7 @@ body {
 
 .nav-panel {
     width: auto;
+    max-width: 500px;
     height: 480px;
 
     background: #FFFFF0;
@@ -158,6 +159,7 @@ body {
 
     .nav-panel {
         width: 95vw;
+        height: auto;
         margin: 0px;
         max-height: 180px;
         margin-bottom: 20px;
@@ -169,6 +171,7 @@ body {
 @media (max-width: 400px) {
     .page-title {
         flex-direction: row;
+        height: auto;
         font-size: 65px;
         line-height: 65px;
         margin-top: 0px;
