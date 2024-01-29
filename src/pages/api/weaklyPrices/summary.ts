@@ -34,7 +34,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   res.status(200).json({ summary: catalogue })
 }
 
-function getCuratedColes(itemsPerCatagory: number) {
+function getCuratedColes(itemCount: number) {
 
   const catagories = [
     "Frozen",
@@ -45,10 +45,10 @@ function getCuratedColes(itemsPerCatagory: number) {
 
   const dir = './src/scripts/weaklyPrices/coles_catalogue/';
 
-  return getCuratedCatalogue(catagories, dir, itemsPerCatagory);
+  return getCuratedCatalogue(catagories, dir, itemCount);
 }
 
-function getCuratedWoolies(itemsPerCatagory: number) {
+function getCuratedWoolies(itemCount: number) {
 
   const catagories = [
     'Half Price',
@@ -57,20 +57,17 @@ function getCuratedWoolies(itemsPerCatagory: number) {
 
   const dir = './src/scripts/weaklyPrices/woolies_catalogue/'
 
-  return getCuratedCatalogue(catagories, dir, itemsPerCatagory)
+  return getCuratedCatalogue(catagories, dir, itemCount)
 }
 
-function getCuratedCatalogue(catagories: string[], dir: string, itemsPerCatagory: number) {
+function getCuratedCatalogue(catagories: string[], dir: string, itemCount: number) {
 
   let allItems: Item[] = [];
   const reader = new CatalogueReader();
 
   for (const catagory of catagories) {
-
     let items = reader.readCsv(dir, catagory);
-
-    items = reader.getTopDrops(items, itemsPerCatagory);
-
+    items = reader.getTopDrops(items, itemCount);
     allItems.push(...items);
   }
 

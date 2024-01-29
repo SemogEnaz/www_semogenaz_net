@@ -5,7 +5,7 @@ export type Item = {
     oldPrice: number;
     newPrice: number;
     link: string;
-  }
+}
 
 export default class CatalogueReader {
 
@@ -13,8 +13,7 @@ export default class CatalogueReader {
 
         const extension = '.csv'
         const filePath = dir + fileName + extension;
-        //console.log(`Attempting to read from ${filePath}`);
-    
+
         try {
             const data = fs.readFileSync(filePath, 'utf8');
             return this._parseData(data);
@@ -22,11 +21,10 @@ export default class CatalogueReader {
             throw err;
         }
     }
-    
+
     _parseData(data: string): Item[] {
-    
+
         let items = [];
-    
         let lines = data.split('\r\n');
     
         for (let line of lines) {
@@ -39,7 +37,7 @@ export default class CatalogueReader {
                 newPrice: parseFloat(substrings[2]),
                 link: substrings[3],
             };
-    
+
             items.push(item);
         }
 
