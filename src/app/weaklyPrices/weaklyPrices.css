@@ -33,7 +33,7 @@ body {
     font-size: 150px;
     font-family: 'Playfair Display';
 
-    margin-top: 50px;
+    margin-top: 30px;
 }
 
 .card-display {
@@ -42,7 +42,6 @@ body {
     align-items: center;
 
     padding-top: 30px;
-    padding-bottom: 50px;
 }
 
 .details-cards {
@@ -138,12 +137,12 @@ body {
     background-color: #0000A6;
 }
 
-@media (max-width: 400px) {
+@media (max-width: 850px) {
 
     .page-title {
         flex-direction: column;
-        font-size: 120px;
-        line-height: 110px;
+        font-size: 150px;
+        line-height: 120px;
         margin-top: 10px;
     }
 
@@ -165,4 +164,13 @@ body {
         justify-content: center;
     }
     
+}
+
+@media (max-width: 400px) {
+    .page-title {
+        flex-direction: row;
+        font-size: 65px;
+        line-height: 65px;
+        margin-top: 0px;
+    }
 }
