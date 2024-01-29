@@ -60,6 +60,11 @@ body {
     margin-right: 0; /* No negative margin for the last child */
 }
 
+.display-panel {
+    display: flex;
+    margin-top: 15px;
+}
+
 .nav-panel {
     width: auto;
     height: 480px;
@@ -131,4 +136,33 @@ body {
 
 .catagory:hover {
     background-color: #0000A6;
+}
+
+@media (max-width: 400px) {
+
+    .page-title {
+        flex-direction: column;
+        font-size: 120px;
+        line-height: 110px;
+        margin-top: 10px;
+    }
+
+    .card-display {
+        padding-top: 15px;
+        padding-bottom: 0px;
+    }
+
+    .display-panel {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nav-panel {
+        width: 95vw;
+        margin: 0px;
+        max-height: 180px;
+        margin-bottom: 20px;
+        justify-content: center;
+    }
+    
 }

@@ -118,7 +118,7 @@ function Table({ apiArg }: { apiArg: string }) {
 
         return (
             <div className="center">
-                <div className='font-bold text-3xl drop-shadow-md'>{`${message}`}</div>
+                <div className='font-bold text-3xl drop-shadow-md text-center'>{`${message}`}</div>
             </div>
         );
     }

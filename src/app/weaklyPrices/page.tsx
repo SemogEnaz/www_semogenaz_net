@@ -203,7 +203,7 @@ function DetailsPage({ states }: { states: any }) {
     return (
         <>
             <Button setState={toMain} content={'Back'}/>
-            <div className="flex mt-[15px]">
+            <div className="display-panel">
                 <Navigator />
                 <DisplayOne />
             </div>

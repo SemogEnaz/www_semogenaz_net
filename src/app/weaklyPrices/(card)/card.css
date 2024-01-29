@@ -3,19 +3,17 @@
     flex-direction: column;
     align-items: center;
 
+    width: 500px;
     margin-bottom: 40px;
 }
 
 .details {
     visibility: hidden;
-
     opacity: 0;
-    transition: opacity 0.5s ease-in-out;
 }
 
 .show {
     visibility: visible;
-
     opacity: 1;
 }
 
@@ -28,7 +26,7 @@
 }
 
 .title > h2 {
-    max-width: 500px;
+    max-width: 100%;
 
     word-wrap: break-word;
     text-align: center;
@@ -49,7 +47,7 @@
     min-height: 200px;
     max-height: 0px;
     overflow: hidden;
-    width: 500px;
+    width: 100%;
     padding: 10px;
 
     border: 6px solid #000080;
@@ -59,12 +57,11 @@
 
     position: relative;
 
-    transition: 
-        max-height 1s ease-in-out;
+    transition: max-height 1s ease-in-out;
 }
 
 .card-content.end-height {
-    max-height: 500px;
+    max-height: 700px;
 }
 
 /* Pseudo element code taken from chatGPT*/
@@ -92,6 +89,11 @@
 .card-content.end-height::before {
     pointer-events: none;
     animation: invisible 0.25s 0.9s ease-in-out forwards;
+}
+
+@keyframes v1sible {
+    from { opacity: 0; }
+    to {opacity: 1;}
 }
 
 /* Since the pseudo element is used to blur and create the 
@@ -159,4 +161,16 @@
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 2;
+}
+
+@media (max-width: 400px) {
+    
+    .brand {
+        font-size: 120px;
+        line-height: 100px;
+    }
+
+    .card {
+        max-width: 95vw;
+    }
 }
