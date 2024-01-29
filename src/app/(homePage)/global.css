@@ -2,10 +2,3 @@
 @tailwind components;
 @tailwind base;
 @tailwind utilities;
-
-/* Importing font, Inter, to root layout */
-@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
-body {
-    font-family: 'Inter', sans-serif;
-  }
-  
