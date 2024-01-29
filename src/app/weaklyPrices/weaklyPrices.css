@@ -61,7 +61,7 @@ body {
 }
 
 .nav-panel {
-    width: 200px;
+    width: auto;
     height: 480px;
 
     background: #FFFFF0;
@@ -73,7 +73,7 @@ body {
     border-radius: 10px;
 
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
 }
 
 .catagory-title {
@@ -86,15 +86,16 @@ body {
     text-justify: center;
 
     font-weight: bold;
-    font-size: x-large;
+    font-size: 30px;
 }
 
 .catagory-panel {
-    width: 100%;
     overflow-y: auto;
     padding: 0px 8px 0px 8px;
     background: #D9B99B;
     border-radius: 10px;
+    display: flex;
+    flex-direction: column;
 }
 
 .catagory-panel::-webkit-scrollbar {
@@ -117,11 +118,17 @@ body {
     background: #000080;
     color: white;
 
-    margin: 8px 0px 8px 0px;
+    margin: 4px 0px 4px 0px;
+    padding: 0px 8px 0px 8px;
     border-radius: 5px;
 
     text-justify: center;
     text-align: center;
+    font-weight: 500;
 
     cursor: pointer;
+}
+
+.catagory:hover {
+    background-color: #0000A6;
 }

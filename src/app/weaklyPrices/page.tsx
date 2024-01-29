@@ -119,7 +119,7 @@ function DetailsPage({ states }: { states: any }) {
 
     const { catalogueName, setCatalogueName } = states;
     const [catagories, setCatagories] = useState([]);
-    const [cardIndex, setIndex] = useState(6);
+    const [cardIndex, setIndex] = useState(6);  // Move this down with the DisplayOne component
     
     useEffect(() => {
         fetch(`/api/weaklyPrices/detailed?brand=${catalogueName}`)
@@ -164,22 +164,38 @@ function DetailsPage({ states }: { states: any }) {
         )
 
         const CatagoryPanel = () => (
-            <>
-            <div className="catagory-title">Catagories</div>
-            <div className="catagory-panel">
-                {catagories.map((category, index) => (
-                    <Selector
-                        key={index}
-                        category={category}
-                        index={index} />
-                ))}
+            <div className='flex flex-col'>
+                <div className="catagory-title">Catagories</div>
+                <div className="catagory-panel">
+                    {catagories.map((category, index) => (
+                        <Selector
+                            key={index}
+                            category={category}
+                            index={index} />
+                    ))}
+                </div>
             </div>
-            </>
         );
+
+        const ItemCountPanel = () => {
+            return <div>Item Count</div>
+        }
+
+        const SelectedItems = () => {
+            return <div>Selected Items</div>
+        }
+
+        const OtherSettings = () => {
+            <div className="flex flex-col ml-[8px]">
+                <ItemCountPanel />
+                <SelectedItems />
+            </div>
+        }
 
         return (
             <div className="nav-panel">
                 <CatagoryPanel />
+                {/*<OtherSettings />*/}
             </div>
         );
     };
@@ -187,7 +203,7 @@ function DetailsPage({ states }: { states: any }) {
     return (
         <>
             <Button setState={toMain} content={'Back'}/>
-            <div className="flex mt-[10px]">
+            <div className="flex mt-[15px]">
                 <Navigator />
                 <DisplayOne />
             </div>
