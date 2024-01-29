@@ -100,8 +100,4 @@
         width: 2px;
         border-radius: 2px;
     }
-
-    .sky, .storm {
-        background-color: rgb(0, 0, 50);
-    }
 }
