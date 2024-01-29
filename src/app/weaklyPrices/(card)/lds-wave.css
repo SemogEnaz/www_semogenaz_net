@@ -19,12 +19,12 @@
     }
 }
 
-.wave-container {
+.lds-wave {
     position: relative;
     overflow: hidden;
 }
 
-.wave-container::before {
+.lds-wave::before {
     content: '';
     position: absolute;
     top: 0;

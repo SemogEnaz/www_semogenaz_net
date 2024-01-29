@@ -152,7 +152,7 @@ function Table({ apiArg }: { apiArg: string }) {
         </div> 
         :
         <div className='card-content skeleton'>
-            <div className="wave-container">
+            <div className="lds-wave">
                 <Heading />
                 <Items catalogue={makeMockObjs(mockItems)} />
                 <Loading message={isError ? `API Error` : `Retriving Data`} />
