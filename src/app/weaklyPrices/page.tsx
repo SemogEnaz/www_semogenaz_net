@@ -20,7 +20,7 @@ const openSans = Open_Sans({
 import { BrandCard, DetailsCard } from './card/card'
 import { makeCheckboxsObj, makeCheckboxes, checkboxOptions } from './checkbox/checkbox';
 import { useEffect, useMemo, useState } from 'react';
-import MyListContext from './ListContext';
+import { MyListProvider, useList, useSavingsCost } from './MyListContext';
 import Head from 'next/head';
 
 export default function Page() {
@@ -122,7 +122,6 @@ function DetailsPage({ states }: { states: any }) {
 
     const { catalogueName, setCatalogueName } = states;
     const [catagories, setCatagories] = useState([]);
-    const [myList, setMyList] = useState<any[]>([]);
 
     // States for the Nav panel
     const [cardIndex, setIndex] = useState(6);  // Move this down with the DisplayOne component?
@@ -211,8 +210,18 @@ function DetailsPage({ states }: { states: any }) {
         );
     };
 
+    const SavingsPanel = () => {
+
+        const savingsCost = useSavingsCost();
+
+        return <div className="">
+            {savingsCost}
+        </div>
+    }
+
     const ScrollSave = useMemo(() => {
         return <CatagoryPanel />;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [catagories]);
 
     return (
@@ -224,16 +233,18 @@ function DetailsPage({ states }: { states: any }) {
         <>
             <Button setState={toMain} content={'Back'}/>
             <div className="display-panel">
-                <div className="nav-panel">
-                    {ScrollSave}
-                    <div className="nav-col">
-                        <ItemCountPanel />
+                <MyListProvider>
+                    <>
+                    <div className="nav-panel">
+                        {ScrollSave}
+                        <div className="nav-col">
+                            <ItemCountPanel />
+                            <SavingsPanel />
+                        </div>
                     </div>
-                </div>
-                <MyListContext.Provider value={{ myList, setMyList }}>
-                    <DisplayOne />
-                </MyListContext.Provider>
-                
+                    <DisplayOne />  
+                    </>   
+                </MyListProvider>       
             </div>
         </>
         

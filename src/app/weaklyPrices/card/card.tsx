@@ -3,6 +3,10 @@ import '../lds/lds-wave.css';
 import styles from '../button.module.css';
 
 import { useState, useEffect } from 'react';
+import { useList, useListOperations } from '../MyListContext';
+
+import { Checkbox } from '../checkbox/checkbox';
+import Item from '../item';
 
 type TitleData = {
     titleContent: string,
@@ -85,32 +89,47 @@ function Table({ apiArg }: { apiArg: string }) {
         </div>
     );
 
-    const Items = ({ catalogue }: any) => (
-        catalogue.map((
-            item: {
-                name: string, oldPrice: string, newPrice: string, link: string
-            }, 
-            index: number) => (
+    const Items = ({ catalogue }: any) => {
 
-        <div key={index} className='item'>
+        const myList = useList();
+        const { addItem, removeItem, checkList } = useListOperations();
 
-            <a href={item.link} target={'_blank'} className={`
-                name p-2
-                border-r-4 border-r-[#000080]`}>
-                {item.name}
-            </a>
+        const toggleCheckbox = (item: any): void => {
+            if (checkList(item.link))
+                removeItem(item.link);
+            else
+                addItem(item);
+        }
 
-            <div className='price'>
-                <div className="
-                    text-gray-500 font-semibold w-1/2 text-right
-                ">${item.oldPrice}</div>
-                &nbsp;
-                <div className="w-1/2 text-left">${item.newPrice}</div>     
-            </div>
+        return (
+            catalogue.map(( item: Item, index: number ) => (
+                <div key={index} className='item'>
 
-        </div>
-        ))
-    );
+                    {myList ?
+                        <Checkbox
+                        isChecked={checkList(item.link)}
+                        handleClick={() => toggleCheckbox(item)}/>
+                    : null}
+                    
+        
+                    <a href={item.link} target={'_blank'} className={`
+                        name p-2
+                        border-r-4 border-r-[#000080]`}>
+                        {item.name}
+                    </a>
+        
+                    <div className='price'>
+                        <div className="
+                            text-gray-500 font-semibold w-1/2 text-right
+                        ">${item.oldPrice}</div>
+                        &nbsp;
+                        <div className="w-1/2 text-left">${item.newPrice}</div>     
+                    </div>
+        
+                </div>
+            ))
+        );
+    };
 
     const Loading = ({ message }: { message: string }) => {
 
