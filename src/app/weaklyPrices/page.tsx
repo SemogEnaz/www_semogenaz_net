@@ -2,6 +2,7 @@
 
 import '@/app/weaklyPrices/weaklyPrices.css';
 import styles from './button.module.css'
+import './nav.css'
 
 import { Poppins } from 'next/font/google';
 import { Open_Sans } from 'next/font/google';
@@ -16,8 +17,10 @@ const openSans = Open_Sans({
     subsets: ['latin'],
 });
 
-import { BrandCard, DetailsCard } from './(card)/card'
-import { useEffect, useState } from 'react';
+import { BrandCard, DetailsCard } from './card/card'
+import { makeCheckboxsObj, makeCheckboxes, checkboxOptions } from './checkbox/checkbox';
+import { useEffect, useMemo, useState } from 'react';
+import MyListContext from './ListContext';
 import Head from 'next/head';
 
 export default function Page() {
@@ -119,7 +122,11 @@ function DetailsPage({ states }: { states: any }) {
 
     const { catalogueName, setCatalogueName } = states;
     const [catagories, setCatagories] = useState([]);
-    const [cardIndex, setIndex] = useState(6);  // Move this down with the DisplayOne component
+    const [myList, setMyList] = useState<any[]>([]);
+
+    // States for the Nav panel
+    const [cardIndex, setIndex] = useState(6);  // Move this down with the DisplayOne component?
+    const [itemCount, setItemCount] = useState('10');
     
     useEffect(() => {
         fetch(`/api/weaklyPrices/detailed?brand=${catalogueName}`)
@@ -131,17 +138,22 @@ function DetailsPage({ states }: { states: any }) {
         setCatalogueName('');
     }
 
-    if (catagories.length == 0) return <div>Loading catagory names...</div>;
-
     const DisplayOne = () => {
         const title = catagories [
             cardIndex > catagories.length ? 
             0 : cardIndex
         ];
-        const apiArg = `detailed?brand=${catalogueName}&category=${encodeURIComponent(title)}`;
+
+        const apiArg =  `detailed?brand=${catalogueName}&` +
+                        `category=${encodeURIComponent(title)}&` +
+                        `count=${itemCount}`;
+
         const cardCSS = `details show`;
 
-        return <DetailsCard title={title} apiArg={apiArg} cardCSS={cardCSS}/>
+        return (
+            <DetailsCard
+                title={title} apiArg={apiArg} cardCSS={cardCSS}/>
+        )
     };
 
     const DisplayAll = () => (
@@ -158,59 +170,73 @@ function DetailsPage({ states }: { states: any }) {
         </div>
     );
 
-    const Navigator = () => {
+    const Selector = ({category, index}: { category: string, index: number }): JSX.Element => (
+        <div className="catagory" onClick={() => setIndex(index)}>
+            {category}
+        </div>
+    )
 
-        const Selector = ({category, index}: { category: string, index: number }): JSX.Element => (
-            <div className="catagory" onClick={() => setIndex(index)}>
-                {category}
+    const CatagoryPanel = () => (
+        <div className='nav-col'>
+            <div className="catagory-title">Catagories</div>
+            <div className="catagory-panel">
+                {catagories.map((category, index) => (
+                    <Selector
+                        key={index}
+                        category={category}
+                        index={index} />
+                ))}
             </div>
-        )
+        </div>
+    );
 
-        const CatagoryPanel = () => (
-            <div className='flex flex-col'>
-                <div className="catagory-title">Catagories</div>
-                <div className="catagory-panel">
-                    {catagories.map((category, index) => (
-                        <Selector
-                            key={index}
-                            category={category}
-                            index={index} />
-                    ))}
-                </div>
-            </div>
+    const ItemCountPanel = () => {
+        const itemCountObj = makeCheckboxsObj(
+            ['10', '15'],
+            ['10', '15']
         );
 
-        const ItemCountPanel = () => {
-            return <div>Item Count</div>
-        }
+        const itemCountComponent = makeCheckboxes(
+            itemCountObj, 
+            { state: itemCount, setState: setItemCount }
+        )
 
-        const SelectedItems = () => {
-            return <div>Selected Items</div>
-        }
-
-        const OtherSettings = () => {
-            <div className="flex flex-col ml-[8px]">
-                <ItemCountPanel />
-                <SelectedItems />
-            </div>
-        }
-
-        return (
-            <div className="nav-panel">
-                <CatagoryPanel />
-                {/*<OtherSettings />*/}
+        return (  
+            <div className="item-count-panel mb-[8px]">
+                <div className="catagory-title" style={{fontSize:`20px`}}>
+                    Item Count:
+                </div>
+                {checkboxOptions(itemCountComponent)}
             </div>
         );
     };
 
+    const ScrollSave = useMemo(() => {
+        return <CatagoryPanel />;
+    }, [catagories]);
+
     return (
+        catagories.length == 0 ?
+        <div className='text-2xl flex justify-center items-center text-justify'>
+            Loading catagory names...
+        </div>
+        :
         <>
             <Button setState={toMain} content={'Back'}/>
             <div className="display-panel">
-                <Navigator />
-                <DisplayOne />
+                <div className="nav-panel">
+                    {ScrollSave}
+                    <div className="nav-col">
+                        <ItemCountPanel />
+                    </div>
+                </div>
+                <MyListContext.Provider value={{ myList, setMyList }}>
+                    <DisplayOne />
+                </MyListContext.Provider>
+                
             </div>
         </>
+        
     );
 }
 
