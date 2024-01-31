@@ -8,7 +8,7 @@ const MyListContext = createContext<Item[] | undefined>(undefined);
 const AddItemContext = createContext<(itemToAdd: Item) => void>(() => {});
 const RemoveItemContext = createContext<(itemToRemove: string) => void>(() => {});
 const CheckListContext = createContext<(itemLink: string) => boolean>(() => true);
-const SavingsCostContext = createContext<number>(0);
+const CostContext = createContext<{savingCost: number, spendingCost: number}>({savingCost: 0, spendingCost: 0});
 
 export function useList() {
     return useContext(MyListContext);
@@ -22,8 +22,8 @@ export function useListOperations() {
     };
 }
 
-export function useSavingsCost() {
-    return useContext(SavingsCostContext);
+export function useCost() {
+    return useContext(CostContext);
 }
 
 /*
@@ -53,7 +53,16 @@ export function MyListProvider({ children }: { children: JSX.Element}) {
         return (
             myList.reduce(
                 (acc: number, item: Item) => (
-                    acc + (Number(item.oldPrice) - Number(item.newPrice))
+                    Math.round(acc + (Number(item.oldPrice) - Number(item.newPrice)))
+                ), 0)
+        );
+    }
+
+    const getSpendingCost = (): number => {
+        return (
+            myList.reduce(
+                (acc: number, item: Item) => (
+                    Math.round(acc + Number(item.newPrice))
                 ), 0)
         );
     }
@@ -68,9 +77,13 @@ export function MyListProvider({ children }: { children: JSX.Element}) {
             <AddItemContext.Provider value={addItem}>
             <RemoveItemContext.Provider value={removeItem}>
             <CheckListContext.Provider value={checkList}>
-            <SavingsCostContext.Provider value={getSavingsCost()}>
+            <CostContext.Provider value={{
+                savingCost: getSavingsCost(),
+                spendingCost: getSpendingCost()}}>
+
                 {children}
-            </SavingsCostContext.Provider>
+                
+            </CostContext.Provider>
             </CheckListContext.Provider>
             </RemoveItemContext.Provider> 
             </AddItemContext.Provider> 
