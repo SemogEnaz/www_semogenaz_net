@@ -23,7 +23,7 @@
     width: auto;
 }
 
-.catagory-title {
+.nav-title {
     background: #D9B99B;
 
     min-height: 45px;
@@ -90,6 +90,12 @@
     background-color: #a18973;
     padding: 8px;
     border-radius: 8px;
+    text-align: center;
+    font-weight: 700;
+}
+
+.nav-title:is(.item-count,.saving-cost) {
+    font-size: 25px;
 }
 
 .saved-cost-panel {

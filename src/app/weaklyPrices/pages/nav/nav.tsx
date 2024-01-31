@@ -1,7 +1,9 @@
 import { makeCheckboxsObj, makeCheckboxes, checkboxOptions } from '../../checkbox/checkbox';
-import { useSavingsCost } from "../../MyListContext";
+import { useCost } from "../../MyListContext";
 
-export default function Navigator({ categoryPanel, itemPanel }): JSX.Element {
+import './nav.css';
+
+export default function Navigator({ categoryPanel, itemPanel, myListPanel }): JSX.Element {
 
     return (
         <div className="nav-panel">
@@ -9,6 +11,7 @@ export default function Navigator({ categoryPanel, itemPanel }): JSX.Element {
             <div className="nav-col">
                 {itemPanel}
                 <SavingsPanel />
+                {myListPanel}
             </div>
         </div>
     );
@@ -16,11 +19,26 @@ export default function Navigator({ categoryPanel, itemPanel }): JSX.Element {
 
 function SavingsPanel() {
 
-    const savingsCost = useSavingsCost();
+    const { savingCost, spendingCost } = useCost();
 
-    return <div className="">
-        {savingsCost}
-    </div>
+    return (
+        <div className="item-count-panel">
+            <div className="nav-title saving-cost">
+                Bill:
+            </div>
+            Saved: ${savingCost}<br></br>
+            Spent: ${spendingCost}
+        </div>
+        
+    );
+}
+
+export function MyListPanel({ setIsMyList }: { setIsMyList: any}) {
+    return (
+        <div className="" onClick={() => setIsMyList((prevBool: boolean)  => !prevBool)}>
+            View Selected Items
+        </div>
+    )
 }
 
 export function ItemCountPanel({ itemCount, setItemCount }:
@@ -38,7 +56,7 @@ export function ItemCountPanel({ itemCount, setItemCount }:
 
     return (  
         <div className="item-count-panel mb-[8px]">
-            <div className="catagory-title" style={{fontSize:`20px`}}>
+            <div className="nav-title item-count">
                 Item Count:
             </div>
             {checkboxOptions(itemCountComponent)}
@@ -57,7 +75,7 @@ export function CatagoryPanel({ categories, setIndex }: { categories: any, setIn
 
     return (
         <div className='nav-col'>
-            <div className="catagory-title">Catagories</div>
+            <div className="nav-title">Catagories</div>
             <div className="catagory-panel">
                 {categories.map((category, index) => (
                     <Selector

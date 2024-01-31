@@ -52,6 +52,23 @@ export function DetailsCard({ title, apiArg, cardCSS }: { title: string, apiArg:
     );
 }
 
+export function MyList() {
+
+    const items = useList();
+
+    return (
+        <div className="card">
+
+            <Title title={'Saved Items:'} titleCSS='text-5xl font-medium' validDates={null} />
+
+            {items && items.length > 0 ?
+            <Table items={items}/> :
+            <div className="">No items in list</div>}
+
+        </div>
+    )
+}
+
 const Title = ({ title, titleCSS, validDates }: 
     {title: string, titleCSS: string, validDates: null | JSX.Element}) => (
 
@@ -63,24 +80,30 @@ const Title = ({ title, titleCSS, validDates }:
         </div>
 )
 
-function Table({ apiArg }: { apiArg: string }) {
+function Table({ apiArg, items }: 
+    { apiArg?: string | undefined, items?: Item[] | undefined }) {
 
-    const [catalogue, setCatalogue] = useState([]);
+    const [catalogue, setCatalogue] = useState<Item[]>([]);
     const [isError, setError] = useState(false);
 
     useEffect(() => {
-        fetch(`/api/weaklyPrices/${apiArg}`)
-            .then(res => {
-                if (!res.ok) {
-                        setError(true);
-                        return {summary: []};
-                }
-                else
-                    return res.json();
-            })
-            .then(data => data.summary)
-            .then(summary => setCatalogue(summary));
-    }, [apiArg]);
+        if (apiArg)
+            fetch(`/api/weaklyPrices/${apiArg}`)
+                .then(res => {
+                    if (!res.ok) {
+                            setError(true);
+                            return {summary: []};
+                    }
+                    else
+                        return res.json();
+                })
+                .then(data => data.summary)
+                .then(summary => setCatalogue(summary));
+        else if (items)
+            setCatalogue(items);
+        else
+            setError(true)
+    }, [apiArg, items]);
 
     const Heading = () => (
         <div className='w-heading'>

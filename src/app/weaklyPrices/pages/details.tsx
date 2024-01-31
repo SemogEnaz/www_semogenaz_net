@@ -1,11 +1,11 @@
 import styles from '../button.module.css'
-import '../nav.css'
+import './nav/nav.css'
 
 import { useEffect, useMemo, useState } from 'react';
 
-import { DetailsCard } from '../card/card';
-import Navigator, { CatagoryPanel, ItemCountPanel } from './nav/nav';
-import { MyListProvider } from '../MyListContext';
+import { DetailsCard, MyList } from '../card/card';
+import Navigator, { CatagoryPanel, ItemCountPanel, MyListPanel } from './nav/nav';
+import { MyListProvider, useList } from '../MyListContext';
 
 export default function DetailsPage({ states }: { states: any }) {
 
@@ -15,6 +15,7 @@ export default function DetailsPage({ states }: { states: any }) {
     // States for the Nav panel
     const [cardIndex, setIndex] = useState(6);
     const [itemCount, setItemCount] = useState('10');
+    const [isMyList, setIsMyList] = useState(false);
     
     useEffect(() => {
         fetch(`/api/weaklyPrices/detailed?brand=${catalogueName}`)
@@ -55,6 +56,9 @@ export default function DetailsPage({ states }: { states: any }) {
             itemCount={itemCount}
             setItemCount={setItemCount} />
 
+    const myListPanel = 
+        <MyListPanel setIsMyList={setIsMyList} />
+
     return (
         catagories.length == 0 ?
         <div className='text-2xl flex justify-center items-center text-justify'>
@@ -68,8 +72,12 @@ export default function DetailsPage({ states }: { states: any }) {
                     <>
                     <Navigator 
                         categoryPanel={categoryPanel} 
-                        itemPanel={itemPanel} />
-                    <DisplayOne />  
+                        itemPanel={itemPanel} 
+                        myListPanel={myListPanel}/>
+
+                    {isMyList ?
+                    <MyList />:
+                    <DisplayOne /> }
                     </>   
                 </MyListProvider>       
             </div>
