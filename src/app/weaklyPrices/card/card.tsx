@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import { useList, useListOperations } from '../MyListContext';
 
 import { Checkbox } from '../checkbox/checkbox';
-import Item from '../item';
+import { Item } from '../types';
 
 type TitleData = {
     titleContent: string,
