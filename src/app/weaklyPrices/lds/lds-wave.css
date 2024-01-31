@@ -22,6 +22,7 @@
 .lds-wave {
     position: relative;
     overflow: hidden;
+    cursor: not-allowed;
 }
 
 .lds-wave::before {
