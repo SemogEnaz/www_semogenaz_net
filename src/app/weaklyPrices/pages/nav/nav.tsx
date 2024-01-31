@@ -1,5 +1,5 @@
 import { makeCheckboxsObj, makeCheckboxes, checkboxOptions } from '../../checkbox/checkbox';
-import { useCost } from "../../MyListContext";
+import { useTotalCost, useLastCost } from "../../MyListContext";
 
 import './nav.css';
 
@@ -19,23 +19,39 @@ export default function Navigator({ categoryPanel, itemPanel, myListPanel }): JS
 
 function SavingsPanel() {
 
-    const { savingCost, spendingCost } = useCost();
+    const { 
+        savedCost: totalSavedCost, 
+        itemCost: totalItemCost 
+    } = useTotalCost();
+
+    const { 
+        savedCost: lastSavedCost, 
+        itemCost: lastItemCost 
+    } = useLastCost();
+
+    const formatLastCost = (lastCost: number): JSX.Element => (
+        lastCost > 0 ?
+        <span style={{color:"darkgreen"}}>+${lastCost}</span> :
+        <span style={{color:"darkred"}}>-${-1*lastCost}</span>
+    );
 
     return (
         <div className="item-count-panel">
+
             <div className="nav-title saving-cost">
-                Bill:
+                Price Data:
             </div>
-            Saved: ${savingCost}<br></br>
-            Spent: ${spendingCost}
+
+            <div>Saved: ${totalSavedCost} {formatLastCost(lastSavedCost)}</div>
+            <div>Spent: ${totalItemCost} {formatLastCost(lastItemCost)}</div>
+
         </div>
-        
     );
 }
 
 export function MyListPanel({ setIsMyList }: { setIsMyList: any}) {
     return (
-        <div className="" onClick={() => setIsMyList((prevBool: boolean)  => !prevBool)}>
+        <div className="nav-title my-list" onClick={() => setIsMyList((prevBool: boolean)  => !prevBool)}>
             View Selected Items
         </div>
     )
@@ -57,7 +73,7 @@ export function ItemCountPanel({ itemCount, setItemCount }:
     return (  
         <div className="item-count-panel mb-[8px]">
             <div className="nav-title item-count">
-                Item Count:
+                ltem Count:
             </div>
             {checkboxOptions(itemCountComponent)}
         </div>

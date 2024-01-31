@@ -1,16 +1,19 @@
 import React, { createContext, useContext, useState } from 'react';
 
-import Item from './item';
+import { Item, Costs } from './types';
 
 const MyListContext = createContext<Item[] | undefined>(undefined);
 
+const defaultCost = {savedCost: 0, itemCost: 0};
+
 // Methods related to list
 const AddItemContext = createContext<(itemToAdd: Item) => void>(() => {});
-const RemoveItemContext = createContext<(itemToRemove: string) => void>(() => {});
+const RemoveItemContext = createContext<(itemLink: string) => void>(() => {});
 const CheckListContext = createContext<(itemLink: string) => boolean>(() => true);
-const CostContext = createContext<{savingCost: number, spendingCost: number}>({savingCost: 0, spendingCost: 0});
+const TotalCostContext = createContext<Costs>(defaultCost);
+const LastCostContext = createContext<Costs>(defaultCost);
 
-export function useList() {
+export function useList(): Item[] | undefined {
     return useContext(MyListContext);
 }
 
@@ -22,8 +25,12 @@ export function useListOperations() {
     };
 }
 
-export function useCost() {
-    return useContext(CostContext);
+export function useTotalCost(): Costs {
+    return useContext(TotalCostContext);
+}
+
+export function useLastCost(): Costs {
+    return useContext(LastCostContext);
 }
 
 /*
@@ -37,34 +44,63 @@ export function useCost() {
 export function MyListProvider({ children }: { children: JSX.Element}) {
 
     const [myList, setMyList] = useState<Item[]>([]);
+    const [lastSavedCost, setLastSavedCost] = useState(0);
+    const [lastItemCost, setLastItemCost] = useState(0);
+
+    const lastCostUpdate = (savedCost: number, itemCost: number) => {
+        setLastSavedCost(savedCost);
+        setLastItemCost(itemCost);
+    }
+
+    const lastCost = (): Costs => {
+        return ({
+            savedCost: lastSavedCost, itemCost: lastItemCost
+        });
+    }
 
     const addItem = (itemToAdd: Item): void => {
         setMyList((prevList: Item[]) => [...prevList, itemToAdd]);
+        lastCostUpdate(
+            calcDrop(itemToAdd), Number(itemToAdd.newPrice)
+        );
     }
 
     const removeItem = (itemLink: string): void => {
         setMyList((prevList: Item[]) => (
-            prevList.filter((currItem: Item) => 
-                currItem.link != itemLink
-        )));
+            prevList.filter((currItem: Item) => {
+                if (currItem.link == itemLink) {
+                    lastCostUpdate(
+                        -1*calcDrop(currItem), -1*Number(currItem.newPrice)
+                    );
+                    return false;
+                }
+                return true;
+        })));
     };
 
-    const getSavingsCost = (): number => {
-        return (
-            myList.reduce(
-                (acc: number, item: Item) => (
-                    Math.round(acc + (Number(item.oldPrice) - Number(item.newPrice)))
-                ), 0)
-        );
-    }
+    const calcDrop = (item: Item): number => (
+        Math.round(Number(item.oldPrice) - Number(item.newPrice))
+    )
 
-    const getSpendingCost = (): number => {
-        return (
-            myList.reduce(
+    const totalCost = (): Costs => {
+
+        const totalSavingsCost = (): number => {
+            return (myList.reduce(
+                (acc: number, item: Item) => (
+                    Math.round(acc + calcDrop(item))
+                ), 0)
+            );
+        }
+    
+        const totalSpendingCost = (): number => {
+            return (myList.reduce(
                 (acc: number, item: Item) => (
                     Math.round(acc + Number(item.newPrice))
                 ), 0)
-        );
+            );
+        }
+
+        return {savedCost: totalSavingsCost(), itemCost: totalSpendingCost()}
     }
 
     // This is working backwards for some reason??? 
@@ -77,13 +113,11 @@ export function MyListProvider({ children }: { children: JSX.Element}) {
             <AddItemContext.Provider value={addItem}>
             <RemoveItemContext.Provider value={removeItem}>
             <CheckListContext.Provider value={checkList}>
-            <CostContext.Provider value={{
-                savingCost: getSavingsCost(),
-                spendingCost: getSpendingCost()}}>
-
+            <TotalCostContext.Provider value={totalCost()}>
+            <LastCostContext.Provider value={lastCost()}>
                 {children}
-                
-            </CostContext.Provider>
+            </LastCostContext.Provider>
+            </TotalCostContext.Provider>
             </CheckListContext.Provider>
             </RemoveItemContext.Provider> 
             </AddItemContext.Provider> 

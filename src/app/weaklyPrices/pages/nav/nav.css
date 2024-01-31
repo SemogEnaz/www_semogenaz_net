@@ -4,7 +4,7 @@
     height: 480px;
 
     background: #FFFFF0;
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 20px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 
     margin-right: 40px;
     margin-top: 55px;
@@ -96,6 +96,21 @@
 
 .nav-title:is(.item-count,.saving-cost) {
     font-size: 25px;
+}
+
+.nav-title.my-list {
+    font-size: 16px;
+    margin: 8px 0 0 0;
+    cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.my-list:hover {
+    background-color: #e6c4a4;
+}
+
+.my-list:active {
+    background-color: #D9B99B;
 }
 
 .saved-cost-panel {
