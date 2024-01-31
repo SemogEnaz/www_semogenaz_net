@@ -33,6 +33,19 @@ def parse_price(price_str: str):
         index = price_str.find('$')
         return price_str[index + 1:]
 
+def remove_duplicates(catalogue: list[Catagory]):
+    for category in catalogue:
+        seen_links = set()
+        unique_items = []
+
+        for item in category.items:
+            if item.link not in seen_links:
+                seen_links.add(item.link)
+                unique_items.append(item)
+                
+        category.items = unique_items
+
+
 # Taken from weaklyPricesV1 ;)
 def write_catalogue_to_csv(catalogue: list[Catagory], dir_name: str) -> None:
 
@@ -193,6 +206,7 @@ def get_coles_catalogue():
     print(f'\nTotal pages read: {total_page_count}')
     print(f'Total items saved: {total_item_count}')
 
+    remove_duplicates(catalogue)
     write_catalogue_to_csv(catalogue, coles_catalogue_dir)
     print(f'Data written to {coles_catalogue_dir}! :)')
 
