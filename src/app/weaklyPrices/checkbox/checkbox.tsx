@@ -196,15 +196,17 @@ export const checkboxOptions = (elements: any): any => (
 );
 
 type CheckboxProps = {
-    content: string,
+    content?: string,
     isChecked: boolean, 
-    hasFormat: boolean,
-    handleClick : (options: any) => void
+    hasFormat?: boolean,
+    handleClick : any
 };
 
 export function Checkbox({ content, isChecked, hasFormat, handleClick }: CheckboxProps) {
 
-    const colorClass = hasFormat ? (isChecked ? 'checked' : '') : 'blocked';
+    const colorClass = hasFormat == undefined ?
+        (isChecked ? 'checked' : '') :
+        (hasFormat ? (isChecked ? 'checked' : '') : 'blocked');
 
     return (
         <div className="checkbox">
@@ -213,7 +215,7 @@ export function Checkbox({ content, isChecked, hasFormat, handleClick }: Checkbo
                 className={`box ${colorClass}`}
                 onClick={handleClick}></div>
 
-            <div className="label">{content}</div>
+            <div className="label">{content ? content: ''}</div>
 
         </div>
     );
