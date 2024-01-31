@@ -1,6 +1,5 @@
 import './card.css';
-import './lds-ring.css';
-import './lds-wave.css';
+import '../lds/lds-wave.css';
 import styles from '../button.module.css';
 
 import { useState, useEffect } from 'react';
