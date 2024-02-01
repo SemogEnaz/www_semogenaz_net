@@ -5,7 +5,7 @@ import CatalogueReader, { Item } from "./reader";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
-    const { brand, category: encodedCategory, count } = req.query;
+    const { brand, category: encodedCategory, itemCount, pageCount } = req.query;
     const category = 
         encodedCategory && !Array.isArray(encodedCategory) ? 
         decodeURIComponent(encodedCategory) : undefined;
@@ -47,23 +47,38 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         return;
     }
 
-    const itemCount = !count || isNaN(Number(count)) ? 10 : Number(count);
+    if (itemCount)
+        try {
+            const summary = getCatalogue(
+                Number(itemCount), 
+                brand == 'coles' ? colesDir : woolieDir, 
+                category as string
+            );
 
-    try {
-        const summary = getCatalogue(
-            itemCount, 
-            brand == 'coles' ? colesDir : woolieDir, 
-            category as string
-        );
+            console.log(`Getting ${brand} page for ${category}, ${itemCount} items`);
+            res.status(200).json({ summary: summary });
+            return;
+        } catch (error) {
+            console.log(`Catagory name ${category} is invlaid for ${brand}!`);
+            res.status(500).end();
+            return;
+        }
+    else if (pageCount)
+        try {
+            const summary = getCatagoryPage(
+                Number(pageCount), 
+                brand == 'coles' ? colesDir : woolieDir, 
+                category as string
+            );
 
-        console.log(`Getting ${brand} page for ${category}`);
-        res.status(200).json({ summary: summary });
-        return;
-    } catch (error) {
-        console.log(`Catagory name ${category} is invlaid for ${brand}!`);
-        res.status(500).end();
-        return;
-    }
+            console.log(`Getting ${brand} page for ${category}, ${pageCount} pages`);
+            res.status(200).json({ summary: summary });
+            return;
+        } catch (error) {
+            console.log(`Catagory name ${category} is invlaid for ${brand}!`);
+            res.status(500).end();
+            return;
+        }
 }
 
 // Reads a csv file and returns card object with name and items attribute
@@ -74,6 +89,13 @@ function getCatalogue(
     const path = `./src/scripts/weaklyPrices/${brandDir}/`;
     const allItems = reader.readCsv(path, catagoryName);
     return reader.getTopDrops(allItems, itemCount);
+}
+
+function getCatagoryPage(pageCount: number, brandDir: string, catagoryName: string): Item[] {
+
+    const catagory = getCatalogue(pageCount*10, brandDir, catagoryName);
+
+    return catagory.slice((pageCount-1)*10, pageCount*10);
 }
 
 /*  Returns catagories of catalogue
