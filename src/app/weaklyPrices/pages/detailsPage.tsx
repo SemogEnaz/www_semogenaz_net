@@ -4,8 +4,8 @@ import './nav/nav.css'
 import { useEffect, useMemo, useState } from 'react';
 
 import { DetailsCard, MyList } from '../card/card';
-import Navigator, { CatagoryPanel, ItemCountPanel, MyListPanel } from './nav/nav';
-import { MyListProvider, useList } from '../MyListContext';
+import Navigator, { CatagoryPanel, ItemCountPanel, MyListPanel, PageCountPanel } from './nav/nav';
+import { MyListProvider } from '../MyListContext';
 
 export default function DetailsPage({ states }: { states: any }) {
 
@@ -15,7 +15,10 @@ export default function DetailsPage({ states }: { states: any }) {
     // States for the Nav panel
     const [cardIndex, setIndex] = useState(6);
     const [itemCount, setItemCount] = useState('10');
+    const [pageCount, setPageCount] = useState('1');
+    const [isPage, setIsPage] = useState(true);
     const [isMyList, setIsMyList] = useState(false);
+
     
     useEffect(() => {
         fetch(`/api/weaklyPrices/detailed?brand=${catalogueName}`)
@@ -33,9 +36,11 @@ export default function DetailsPage({ states }: { states: any }) {
             0 : cardIndex
         ];
 
-        const apiArg =  `detailed?brand=${catalogueName}&` +
-                        `category=${encodeURIComponent(title)}&` +
-                        `count=${itemCount}`;
+        let apiArg =  
+            `detailed?brand=${catalogueName}&` +
+            `category=${encodeURIComponent(title)}&`;
+
+        apiArg += isPage ? `pageCount=${pageCount}` : `itemCount=${itemCount}`;
 
         const cardCSS = `details show`;
 
@@ -51,7 +56,20 @@ export default function DetailsPage({ states }: { states: any }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [catagories])
 
-    const itemPanel = 
+    const ListOrPage = (): JSX.Element => {
+        const bluebutton = "bg-[#000080] text-white flex justify-center w-[20px] h-[93%] rounded-r-[8px]";
+        const handleClick = (bool: boolean) => (() => setIsPage(prevBool => !prevBool))
+        return (
+                <div className={bluebutton} onClick={handleClick(false)}>&gt;</div>
+        );
+    }
+
+    const panel = 
+        isPage ?
+        <PageCountPanel
+            pageCount={pageCount}
+            setPageCount={setPageCount} />
+        :
         <ItemCountPanel
             itemCount={itemCount}
             setItemCount={setItemCount} />
@@ -72,7 +90,8 @@ export default function DetailsPage({ states }: { states: any }) {
                     <>
                     <Navigator 
                         categoryPanel={categoryPanel} 
-                        itemPanel={itemPanel} 
+                        panel={panel} 
+                        options={<ListOrPage />}
                         myListPanel={myListPanel}/>
 
                     {isMyList ?
