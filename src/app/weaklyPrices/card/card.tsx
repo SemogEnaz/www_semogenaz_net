@@ -4,7 +4,7 @@ import styles from '../button.module.css';
 
 import { useState, useEffect } from 'react';
 import { useList, useListOperations } from '../ListContext';
-import { useViewList } from '../pages/NavContext';
+import { useViewList, useCategoryIndex, usePagerContext } from '../pages/NavContext';
 
 import { Checkbox } from '../checkbox/checkbox';
 import { Item } from '../types';
@@ -43,8 +43,28 @@ export function BrandCard({ titleData, linkData, apiArg }: BrandCardProps) {
     );
 }
 
-export function DetailsCard({ title, apiArg, cardCSS }: { title: string, apiArg: string, cardCSS: string}) {
+export function DetailsCard({ categories, brandName }: { categories: string[], brandName: string}) {
+    const { state: isMyList } = useViewList();
+    const { state: cardIndex } = useCategoryIndex();
+    const { itemCount: { state: itemCount }} = usePagerContext();
+    const { pageCount: { state: pageCount }} = usePagerContext();
 
+    if (isMyList) return null;
+
+    const isPage = true;
+
+    const title = categories [
+        cardIndex > categories.length ? 
+        0 : cardIndex
+    ];
+
+    let apiArg =  
+        `detailed?brand=${brandName}&` +
+        `category=${encodeURIComponent(title)}&`;
+
+    apiArg += isPage ? `pageCount=${pageCount}` : `itemCount=${itemCount}`;
+
+    const cardCSS = `details show`;
     return (
         <div className={`card ${cardCSS}`}>
             <Title title={title} titleCSS='text-5xl font-medium' validDates={null} />

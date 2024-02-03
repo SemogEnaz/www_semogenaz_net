@@ -14,15 +14,6 @@ export default function DetailsPage({ states }: { states: any }) {
     const { catalogueName, setCatalogueName } = states;
     const [categories, setCatagories] = useState([]);
 
-    // States for the Nav panel
-    /*
-    const [cardIndex, setIndex] = useState(6);
-    const [itemCount, setItemCount] = useState('10');
-    const [pageCount, setPageCount] = useState('1');
-    */
-    const isPage = true;
-    const { state: isMyList } = useViewList();
-
     useEffect(() => {
         fetch(`/api/weaklyPrices/detailed?brand=${catalogueName}`)
             .then(res => res.json())
@@ -32,33 +23,6 @@ export default function DetailsPage({ states }: { states: any }) {
     const toMain = () => {
         setCatalogueName('');
     }
-
-    const DisplayCategory = () => {
-        const { state: isMyList } = useViewList();
-        const { state: cardIndex } = useCategoryIndex();
-        const { itemCount: { state: itemCount }} = usePagerContext();
-        const { pageCount: { state: pageCount }} = usePagerContext();
-
-        if (isMyList) return null;
-
-        const title = categories [
-            cardIndex > categories.length ? 
-            0 : cardIndex
-        ];
-
-        let apiArg =  
-            `detailed?brand=${catalogueName}&` +
-            `category=${encodeURIComponent(title)}&`;
-
-        apiArg += isPage ? `pageCount=${pageCount}` : `itemCount=${itemCount}`;
-
-        const cardCSS = `details show`;
-
-        return (
-            <DetailsCard
-                title={title} apiArg={apiArg} cardCSS={cardCSS}/>
-        )
-    };
 
     const categoryPanel = useMemo(() => {
         return  <CatagoryPanel categories={categories}/>;
@@ -73,7 +37,9 @@ export default function DetailsPage({ states }: { states: any }) {
         :
         <>
             <Button setState={toMain} content={'Back'}/>
+
             <div className="display-panel">
+                
                 <ListProvider>
                 <PagerProvider>
                 <CategoryIndexProvider>
@@ -84,12 +50,13 @@ export default function DetailsPage({ states }: { states: any }) {
                     </Navigator>
 
                     <MyList />
-                    <DisplayCategory />
+                    <DetailsCard categories={categories} brandName={catalogueName} />
                     </>   
                 </ViewListProvider>
                 </CategoryIndexProvider>
                 </PagerProvider>
-                </ListProvider>       
+                </ListProvider>      
+
             </div>
         </>
         
