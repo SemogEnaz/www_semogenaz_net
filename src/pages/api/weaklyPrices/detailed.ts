@@ -47,7 +47,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         return;
     }
 
-    if (itemCount)
+    if (itemCount && !pageCount)
         try {
             const summary = getCatalogue(
                 Number(itemCount), 
@@ -63,9 +63,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             res.status(500).end();
             return;
         }
-    else if (pageCount)
+
+    if (itemCount && pageCount)
         try {
             const summary = getCatagoryPage(
+                Number(itemCount),
                 Number(pageCount), 
                 brand == 'coles' ? colesDir : woolieDir, 
                 category as string
@@ -91,11 +93,9 @@ function getCatalogue(
     return reader.getTopDrops(allItems, itemCount);
 }
 
-function getCatagoryPage(pageCount: number, brandDir: string, catagoryName: string): Item[] {
-
-    const catagory = getCatalogue(pageCount*10, brandDir, catagoryName);
-
-    return catagory.slice((pageCount-1)*10, pageCount*10);
+function getCatagoryPage(itemCount: number, pageCount: number, brandDir: string, catagoryName: string): Item[] {
+    const catagory = getCatalogue(pageCount*itemCount, brandDir, catagoryName);
+    return catagory.slice((pageCount-1)*itemCount, pageCount*itemCount);
 }
 
 /*  Returns catagories of catalogue

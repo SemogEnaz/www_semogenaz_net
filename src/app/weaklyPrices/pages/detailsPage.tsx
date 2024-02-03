@@ -7,12 +7,12 @@ import { DetailsCard, MyList } from '../card/card';
 import Navigator, { CatagoryPanel } from './nav/nav';
 
 import { ListProvider } from '../ListContext';
-import { CategoryIndexProvider, PagerProvider, ViewListProvider, useCategoryIndex, usePagerContext, useViewList } from './NavContext';
+import { CategoryIndexProvider, PagerProvider, ViewListProvider } from './NavContext';
 
 export default function DetailsPage({ states }: { states: any }) {
 
     const { catalogueName, setCatalogueName } = states;
-    const [categories, setCatagories] = useState([]);
+    const [categories, setCatagories] = useState<string[]>([]);
 
     useEffect(() => {
         fetch(`/api/weaklyPrices/detailed?brand=${catalogueName}`)
@@ -29,38 +29,52 @@ export default function DetailsPage({ states }: { states: any }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [categories]);
 
-    return (
-        categories.length == 0 ?
+    const table = 
+        <>
+        <MyList />
+        <DetailsCard categories={ categories } brandName={ catalogueName } />
+        </>
+
+    const LoadingScreen = () => (
         <div className='text-2xl flex justify-center items-center text-justify'>
             Loading catagory names...
         </div>
-        :
-        <>
-            <Button setState={toMain} content={'Back'}/>
-
-            <div className="display-panel">
-                
-                <ListProvider>
-                <PagerProvider>
-                <CategoryIndexProvider>
-                <ViewListProvider>
-                    <>
-                    <Navigator>
-                        {categoryPanel}
-                    </Navigator>
-
-                    <MyList />
-                    <DetailsCard categories={categories} brandName={catalogueName} />
-                    </>   
-                </ViewListProvider>
-                </CategoryIndexProvider>
-                </PagerProvider>
-                </ListProvider>      
-
-            </div>
-        </>
-        
     );
+
+    const ContentScreen = () => (
+        <>
+        <Button setState={toMain} content={'Back'}/>
+
+        <div className="display-panel">
+            
+            <StateAggration>
+                <Navigator
+                    category={ categoryPanel }
+                    table={table} />
+            </StateAggration>
+        </div>
+        </>
+    );
+
+    return (
+        categories.length == 0 ?
+        <LoadingScreen /> :
+        <ContentScreen />
+    );
+}
+
+function StateAggration({ children }: { children: JSX.Element }): JSX.Element {
+    return (
+        <ListProvider>
+            <PagerProvider>
+                <CategoryIndexProvider>
+                    <ViewListProvider>
+                        {children}
+                    </ViewListProvider>
+                </CategoryIndexProvider>
+            </PagerProvider>
+        </ListProvider>   
+    )
 }
 
 export function Button({ setState, content }: { setState: () => void, content: string}) {

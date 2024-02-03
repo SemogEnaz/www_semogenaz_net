@@ -4,23 +4,29 @@ import { useCategoryIndex, usePagerContext, useViewList } from '../NavContext';
 
 import './nav.css';
 
-export default function Navigator({ children }: { children: JSX.Element }): JSX.Element {
+type SubPanels = {
+    category: JSX.Element,
+    table: JSX.Element
+}
+
+export default function Navigator({ category, table }: SubPanels): JSX.Element {
 
     return (
         <div className="nav-panel">
-            { children }
-            <div className="nav-col">
-                <div className="flex flex-row">
-                    <PageCountPanel />
-                </div>
-                <SavingsPanel />
-                <MyListPanel />
+            { category }
+            <div className=" flex flex-col">
+                <PagerPanel />
+                { table }
+            </div>
+            <div className="">
+                <DataPanel />
+                <UserListPanel />
             </div>
         </div>
     );
 }
 
-function SavingsPanel() {
+function DataPanel() {
 
     const { total, last } = useCost();
 
@@ -31,31 +37,35 @@ function SavingsPanel() {
     );
 
     return (
-        <div className="item-count-panel">
-
-            <div className="nav-title saving-cost">
-                Price Data:
-            </div>
-
+        <div className="data panel">
+            <div className="nav-title small">Price Data:</div>
             <div>Saved: ${total.saved} {formatLastCost(last.saved)}</div>
             <div>Spent: ${total.spent} {formatLastCost(last.spent)}</div>
-
         </div>
     );
 }
 
-export function MyListPanel() {
+function UserListPanel() {
     const { setState: setIsMyList } = useViewList();
 
     return (
-        <div className="nav-title my-list" onClick={() => setIsMyList((prevBool: boolean)  => !prevBool)}>
+        <div className="nav-title small user-list category-button" onClick={() => setIsMyList((prevBool: boolean)  => !prevBool)}>
             View Selected Items
         </div>
     )
 }
 
-export function ItemCountPanel({ itemCount, setItemCount }:
-    { itemCount: string, setItemCount: any }) {
+const PagerPanel = (): JSX.Element => (
+    <div className="pager-panel">
+        <ItemCountPanel />
+        <PageCountPanel />
+    </div>
+)
+
+function ItemCountPanel() {
+
+    const { itemCount: { state: itemCount }} = usePagerContext();
+    const { itemCount: { setState: setItemCount }} = usePagerContext();
 
     const itemCountObj = makeCheckboxsObj(
         ['10', '15'],
@@ -68,10 +78,8 @@ export function ItemCountPanel({ itemCount, setItemCount }:
     );
 
     return (  
-        <div className="item-count-panel mb-[8px]">
-            <div className="nav-title item-count">
-                ltem Count:
-            </div>
+        <div className="panel">
+            <div className="nav-title small">ltem Count:</div>
             {checkboxOptions(itemCountComponent)}
         </div>
     );
@@ -82,8 +90,8 @@ function PageCountPanel() {
     const { pageCount } = usePagerContext();
 
     const itemCountObj = makeCheckboxsObj(
-        ['1', '2', '3'],
-        ['1', '2', '3']
+        ['', '', '', '', '', ''],
+        ['1', '2', '3', '4', '5', '6']
     );
 
     const itemCountComponent = makeCheckboxes(
@@ -91,10 +99,8 @@ function PageCountPanel() {
     );
 
     return (  
-        <div className="item-count-panel mb-[8px]">
-            <div className="nav-title item-count">
-                Page Count:
-            </div>
+        <div className="panel">
+            <div className="nav-title small">Page Count:</div>
             {checkboxOptions(itemCountComponent)}
         </div>
     );
@@ -107,16 +113,16 @@ export function CatagoryPanel({ categories }: { categories: string[]}) {
 
     const Selector = ({category, index}: 
         { category: string, index: number }): JSX.Element => (
-        <div className="catagory" onClick={() => {
+        <div className="category-button" onClick={() => {
             setIndex(index); setViewList(false) }}>
             {category}
         </div>
     );
 
     return (
-        <div className='nav-col'>
+        <div className='panel category-panel'>
             <div className="nav-title">Catagories</div>
-            <div className="catagory-panel">
+            <div className="category-button-diplay">
                 {categories.map((category, index) => (
                     <Selector
                         key={index}

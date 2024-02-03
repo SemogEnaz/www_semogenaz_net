@@ -51,8 +51,6 @@ export function DetailsCard({ categories, brandName }: { categories: string[], b
 
     if (isMyList) return null;
 
-    const isPage = true;
-
     const title = categories [
         cardIndex > categories.length ? 
         0 : cardIndex
@@ -62,11 +60,11 @@ export function DetailsCard({ categories, brandName }: { categories: string[], b
         `detailed?brand=${brandName}&` +
         `category=${encodeURIComponent(title)}&`;
 
-    apiArg += isPage ? `pageCount=${pageCount}` : `itemCount=${itemCount}`;
+    apiArg += `pageCount=${pageCount}&`; 
+    apiArg += `itemCount=${itemCount}`;
 
-    const cardCSS = `details show`;
     return (
-        <div className={`card ${cardCSS}`}>
+        <div className='card details show'>
             <Title title={title} titleCSS='text-5xl font-medium' validDates={null} />
             <Table apiArg={apiArg} />
         </div>
@@ -80,14 +78,20 @@ export function MyList() {
 
     if (!isMyList) return null;
 
+    const LoadingScreen = () => (
+        <div className="card-content flex justify-center items-center text-3xl">
+            <span className='opacity-75 tracking-widest text-center'>
+                No items saved<br></br>so empty...</span></div>
+    )
+
     return (
-        <div className="card">
+        <div className="card details show">
 
             <Title title={'Saved Items:'} titleCSS='text-5xl font-medium' validDates={null} />
 
             {items && items.length > 0 ?
             <Table items={items}/> :
-            <div className="">No items in list</div>}
+            <LoadingScreen />}
 
         </div>
     )
