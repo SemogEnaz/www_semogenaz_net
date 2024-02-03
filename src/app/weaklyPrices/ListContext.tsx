@@ -26,8 +26,8 @@ export function useList() {
     return useContext(ListContext)?.list;
 }
 
-export function useCost(): { total: Costs, last: Costs } | undefined {
-    return useContext(ListContext)?.cost;
+export function useCost(): { total: Costs, last: Costs } {
+    return useContext(ListContext)!.cost;
 }
 
 export function useListOperations(): {
