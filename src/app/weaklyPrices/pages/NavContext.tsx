@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { Dispatch, SetStateAction, createContext, useContext, useState } from "react";
 
 type NumericState = {
     state: number,
-    setState: (index: number) => void
+    setState: Dispatch<SetStateAction<number>>
 }
 
 const defaultNumericState = {
@@ -19,7 +19,7 @@ const PagerContext =
 
 const ViewListContext = 
     createContext<{
-        state: boolean, setState: (state: boolean) => void}>({
+        state: boolean, setState: Dispatch<SetStateAction<boolean>>}>({
         state: false, setState: () => {}});
 
 // Custom hooks for the contexts

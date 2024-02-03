@@ -1,20 +1,20 @@
 import { makeCheckboxsObj, makeCheckboxes, checkboxOptions } from '../../checkbox/checkbox';
 import { useCost } from "../../ListContext";
+import { useCategoryIndex, usePagerContext, useViewList } from '../NavContext';
 
 import './nav.css';
 
-export default function Navigator({ categoryPanel, panel, myListPanel, options }): JSX.Element {
+export default function Navigator({ children }: { children: JSX.Element }): JSX.Element {
 
     return (
         <div className="nav-panel">
-            {categoryPanel}
+            { children }
             <div className="nav-col">
                 <div className="flex flex-row">
-                    {panel}
-                    {options}
+                    <PageCountPanel />
                 </div>
                 <SavingsPanel />
-                {myListPanel}
+                <MyListPanel />
             </div>
         </div>
     );
@@ -44,7 +44,9 @@ function SavingsPanel() {
     );
 }
 
-export function MyListPanel({ setIsMyList }: { setIsMyList: any}) {
+export function MyListPanel() {
+    const { setState: setIsMyList } = useViewList();
+
     return (
         <div className="nav-title my-list" onClick={() => setIsMyList((prevBool: boolean)  => !prevBool)}>
             View Selected Items
@@ -75,15 +77,17 @@ export function ItemCountPanel({ itemCount, setItemCount }:
     );
 };
 
-export function PageCountPanel({ pageCount, setPageCount}) {
+function PageCountPanel() {
+
+    const { pageCount } = usePagerContext();
+
     const itemCountObj = makeCheckboxsObj(
         ['1', '2', '3'],
         ['1', '2', '3']
     );
 
     const itemCountComponent = makeCheckboxes(
-        itemCountObj,
-        { state: pageCount, setState: setPageCount }
+        itemCountObj, pageCount
     );
 
     return (  
@@ -96,11 +100,15 @@ export function PageCountPanel({ pageCount, setPageCount}) {
     );
 }
 
-export function CatagoryPanel({ categories, setIndex }: { categories: any, setIndex: any }) {
+export function CatagoryPanel({ categories }: { categories: string[]}) {
+
+    const { setState: setIndex } = useCategoryIndex();
+    const { setState: setViewList } = useViewList();
 
     const Selector = ({category, index}: 
         { category: string, index: number }): JSX.Element => (
-        <div className="catagory" onClick={() => setIndex(index)}>
+        <div className="catagory" onClick={() => {
+            setIndex(index); setViewList(false) }}>
             {category}
         </div>
     );

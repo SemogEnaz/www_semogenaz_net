@@ -4,6 +4,7 @@ import styles from '../button.module.css';
 
 import { useState, useEffect } from 'react';
 import { useList, useListOperations } from '../ListContext';
+import { useViewList } from '../pages/NavContext';
 
 import { Checkbox } from '../checkbox/checkbox';
 import { Item } from '../types';
@@ -55,6 +56,9 @@ export function DetailsCard({ title, apiArg, cardCSS }: { title: string, apiArg:
 export function MyList() {
 
     const items = useList();
+    const { state: isMyList } = useViewList();
+
+    if (!isMyList) return null;
 
     return (
         <div className="card">
