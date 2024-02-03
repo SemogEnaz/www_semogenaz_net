@@ -49,6 +49,9 @@ export function DetailsCard({ categories, brandName }: { categories: string[], b
     const { itemCount: { state: itemCount }} = usePagerContext();
     const { pageCount: { state: pageCount }} = usePagerContext();
 
+    const correctCount = (count: number, initial: number) => 
+        count == 0 ? initial : count;
+
     if (isMyList) return null;
 
     const title = categories [
@@ -60,8 +63,8 @@ export function DetailsCard({ categories, brandName }: { categories: string[], b
         `detailed?brand=${brandName}&` +
         `category=${encodeURIComponent(title)}&`;
 
-    apiArg += `pageCount=${pageCount}&`; 
-    apiArg += `itemCount=${itemCount}`;
+    apiArg += `pageCount=${correctCount(pageCount, 1)}&`; 
+    apiArg += `itemCount=${correctCount(itemCount, 10)}`;
 
     return (
         <div className='card details show'>
