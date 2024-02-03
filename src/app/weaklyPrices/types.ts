@@ -6,6 +6,6 @@ export type Item = {
 }
 
 export type Costs = {
-    savedCost: number,
-    itemCost: number
+    saved: number,
+    spent: number
 }

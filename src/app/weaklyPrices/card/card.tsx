@@ -3,7 +3,7 @@ import '../lds/lds-wave.css';
 import styles from '../button.module.css';
 
 import { useState, useEffect } from 'react';
-import { useList, useListOperations } from '../MyListContext';
+import { useList, useListOperations } from '../ListContext';
 
 import { Checkbox } from '../checkbox/checkbox';
 import { Item } from '../types';
@@ -114,11 +114,11 @@ function Table({ apiArg, items }:
 
     const Items = ({ catalogue }: any) => {
 
-        const myList = useList();
-        const { addItem, removeItem, checkList } = useListOperations();
+        const list = useList();
+        const { addItem, removeItem, inList } = useListOperations();
 
         const toggleCheckbox = (item: any): void => {
-            if (checkList(item.link))
+            if (inList(item.link))
                 removeItem(item.link);
             else
                 addItem(item);
@@ -128,9 +128,9 @@ function Table({ apiArg, items }:
             catalogue.map(( item: Item, index: number ) => (
                 <div key={index} className='item'>
 
-                    {myList ?
+                    {list ?
                         <Checkbox
-                        isChecked={checkList(item.link)}
+                        isChecked={inList(item.link)}
                         handleClick={() => toggleCheckbox(item)}/>
                     : null}
                     
@@ -140,7 +140,7 @@ function Table({ apiArg, items }:
                         border-r-4 border-r-[#000080]`}>
                         {item.name}
                     </a>
-        
+
                     <div className='price'>
                         <div className="
                             text-gray-500 font-semibold w-1/2 text-right

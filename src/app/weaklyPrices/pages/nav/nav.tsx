@@ -1,15 +1,18 @@
 import { makeCheckboxsObj, makeCheckboxes, checkboxOptions } from '../../checkbox/checkbox';
-import { useTotalCost, useLastCost } from "../../MyListContext";
+import { useCost } from "../../ListContext";
 
 import './nav.css';
 
-export default function Navigator({ categoryPanel, itemPanel, myListPanel }): JSX.Element {
+export default function Navigator({ categoryPanel, panel, myListPanel, options }): JSX.Element {
 
     return (
         <div className="nav-panel">
             {categoryPanel}
             <div className="nav-col">
-                {itemPanel}
+                <div className="flex flex-row">
+                    {panel}
+                    {options}
+                </div>
                 <SavingsPanel />
                 {myListPanel}
             </div>
@@ -19,15 +22,7 @@ export default function Navigator({ categoryPanel, itemPanel, myListPanel }): JS
 
 function SavingsPanel() {
 
-    const { 
-        savedCost: totalSavedCost, 
-        itemCost: totalItemCost 
-    } = useTotalCost();
-
-    const { 
-        savedCost: lastSavedCost, 
-        itemCost: lastItemCost 
-    } = useLastCost();
+    const { total, last } = useCost();
 
     const formatLastCost = (lastCost: number): JSX.Element => (
         lastCost > 0 ?
@@ -42,8 +37,8 @@ function SavingsPanel() {
                 Price Data:
             </div>
 
-            <div>Saved: ${totalSavedCost} {formatLastCost(lastSavedCost)}</div>
-            <div>Spent: ${totalItemCost} {formatLastCost(lastItemCost)}</div>
+            <div>Saved: ${total.saved} {formatLastCost(last.saved)}</div>
+            <div>Spent: ${total.spent} {formatLastCost(last.spent)}</div>
 
         </div>
     );
@@ -68,7 +63,7 @@ export function ItemCountPanel({ itemCount, setItemCount }:
     const itemCountComponent = makeCheckboxes(
         itemCountObj,
         { state: itemCount, setState: setItemCount }
-    )
+    );
 
     return (  
         <div className="item-count-panel mb-[8px]">
@@ -79,6 +74,27 @@ export function ItemCountPanel({ itemCount, setItemCount }:
         </div>
     );
 };
+
+export function PageCountPanel({ pageCount, setPageCount}) {
+    const itemCountObj = makeCheckboxsObj(
+        ['1', '2', '3'],
+        ['1', '2', '3']
+    );
+
+    const itemCountComponent = makeCheckboxes(
+        itemCountObj,
+        { state: pageCount, setState: setPageCount }
+    );
+
+    return (  
+        <div className="item-count-panel mb-[8px]">
+            <div className="nav-title item-count">
+                Page Count:
+            </div>
+            {checkboxOptions(itemCountComponent)}
+        </div>
+    );
+}
 
 export function CatagoryPanel({ categories, setIndex }: { categories: any, setIndex: any }) {
 

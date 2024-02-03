@@ -2,8 +2,8 @@
 
 import '@/app/weaklyPrices/weaklyPrices.css';
 
-import MainPage from './pages/main';
-import DetailsPage from './pages/details';
+import MainPage from './pages/mainPage';
+import DetailsPage from './pages/detailsPage';
 
 import { useState } from 'react';
 import Head from 'next/head';

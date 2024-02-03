@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { DetailsCard, MyList } from '../card/card';
 import Navigator, { CatagoryPanel, ItemCountPanel, MyListPanel, PageCountPanel } from './nav/nav';
-import { MyListProvider } from '../MyListContext';
+import { ListProvider } from '../ListContext';
 
 export default function DetailsPage({ states }: { states: any }) {
 
@@ -86,7 +86,7 @@ export default function DetailsPage({ states }: { states: any }) {
         <>
             <Button setState={toMain} content={'Back'}/>
             <div className="display-panel">
-                <MyListProvider>
+                <ListProvider>
                     <>
                     <Navigator 
                         categoryPanel={categoryPanel} 
@@ -98,7 +98,7 @@ export default function DetailsPage({ states }: { states: any }) {
                     <MyList />:
                     <DisplayOne /> }
                     </>   
-                </MyListProvider>       
+                </ListProvider>       
             </div>
         </>
         
