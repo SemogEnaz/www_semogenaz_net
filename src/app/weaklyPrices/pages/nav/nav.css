@@ -5,13 +5,7 @@
 
 .nav-panel > * {
     margin: 10px;
-}
-
-.nav-col {
-    display: flex;
-    flex-direction: column;
-    margin: 0px 4px;
-    width: auto;
+    max-width: 500px;
 }
 
 .nav-title {
@@ -90,10 +84,8 @@
 .pager-panel {
     display: flex;
     flex-direction: row;
-    justify-content: start;
 
     width: 100%;
-    max-width: 500px;
     margin-bottom: 10px;
     border-radius: 10px;
 }
@@ -112,6 +104,7 @@ div.pager-panel > div:nth-child(2) {
 
 .data.panel {
     font-weight: 700;
+    text-align: center;
 }
 
 .nav-title:is(.small) {
@@ -130,16 +123,6 @@ div.pager-panel > div:nth-child(2) {
     align-items: center;
 }
 
-/*
-.user-list:hover {
-    background-color: #e6c4a4;
-}
-
-.user-list:active {
-    background-color: #D9B99B;
-}
-*/
-
 @media (max-width: 850px) {
 
     .nav-panel {
@@ -148,14 +131,46 @@ div.pager-panel > div:nth-child(2) {
         margin-bottom: 20px;
         justify-content: center;
         padding: 8px 4px;
-        max-height: 290px;
+        padding-top: 0px;
+
+        flex-direction: column;
+        align-items: center;
     }
-    
+
+    .nav-panel > * {
+        min-width: 300px;
+    }
+
+    .category-button-diplay {
+        max-height: 100px;
+    }
+
+    .card {
+        margin-bottom: 0px;
+    }
+
+    .display-panel {
+        margin-top: 0px
+    }
 }
 
-@media (max-width: 400px) {
-    .nav-title:is(.item-count,.saving-cost) {
-        font-size: 22px;
+@media (max-width: 450px) {
+    .details .card-content {
+        overflow-y: scroll;
+        max-height: 300px;
+        padding: 10px 0px;
+    }
+
+    .card-content::-webkit-scrollbar {
+        width: 6px;
+        background-color: #000080;
+    }
+
+    .card-content::-webkit-scrollbar-thumb {
+        width: 12px;
+        border: 2px solid white;
+        border-radius: 6px;
+        background-color: #000080;
     }
 }
 
