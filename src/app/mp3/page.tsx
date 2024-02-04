@@ -24,6 +24,8 @@ export default function Page() {
 
                 text-6xl
                 md:text-7xl
+
+                opacity-50
             '>
                 .mp3
             </div>
