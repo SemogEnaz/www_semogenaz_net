@@ -27,16 +27,16 @@ export default function AudioForm({ url, setLoading, setFileName, setTitle }: Fo
     const [hasFormat, setHasFormat] = useState(false);
     const [isSubmit, setSubmit] = useState(false);
 
+    const resetOption = (attribute: string) => {
+        setAudioOptions(prev => ({
+            ...prev,
+            [attribute]: ''
+        }));
+    }
+
     // Blocking the depending checkboxes & reseting
     // the blocked depending checkbox values
     useEffect(() => {
-        const resetOption = (attribute: string) => {
-            setAudioOptions(prev => ({
-                ...prev,
-                [attribute]: ''
-            }));
-        }
-
         const currentFormat = audioOptions['format'];
         const notEmpty = currentFormat != '';
         const notWav = currentFormat != 'wav';
@@ -60,8 +60,9 @@ export default function AudioForm({ url, setLoading, setFileName, setTitle }: Fo
         const isEmbed = audioOptions['thumbnail'] == 'embed';
         //const isDownload = audioOptions['thumbnail'] == 'write';
 
-        if (!isFormat && !isEmbed) {
+        if (!isFormat && isEmbed) {
             setTitle('Invalid options (0____0 )');
+            resetOption('thumbnail')
             return;
         }
 
