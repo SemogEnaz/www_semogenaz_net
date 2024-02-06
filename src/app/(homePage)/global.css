@@ -6,5 +6,9 @@
 @tailwind utilities;
 
 body {
-    font-family: 'Inter', sans-serif;
-  }
+  font-family: 'Inter', sans-serif;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+}
