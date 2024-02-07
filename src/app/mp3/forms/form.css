@@ -79,8 +79,7 @@ html {
 }
 
 .form-title {
-    height: 50px;
-
+    max-height: 0px;
     opacity: 1;
 
     display: flex;
@@ -89,10 +88,12 @@ html {
 
     font-size: x-large;
     text-align: center;
+
+    transition: max-height ease-in-out 1s;
 }
 
 .form-title.show {
-    animation: visible 1s forwards;
+    max-height: 100px;
 }
 
 @keyframes visible {
