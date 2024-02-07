@@ -8,6 +8,7 @@ import LoadingForm from "./formLoading";
 import './form.css'
 import './checkbox.css'
 import Image from 'next/image';
+import IGForm from "./formIG";
 
 export type FormArgs = {
     url: string, 
@@ -52,35 +53,13 @@ export default function SubmissionForm() {
 
     const [title, setTitle] = useState('');
     const [isAudio, setAudio] = useState(true);
-    const [isRevealed, setRevealed] = useState(false);
+    const [isYt, setIsYt] = useState(true);
     const [url, setUrl] = useState('');
     const [loadingData, setLoading] = useState(() => ({
         isLoading: false,
         message: ''
     }));
     const [fileName, setFileName] = useState('');
-
-    useEffect(() => {
-
-        if (isBadUrl(url)) {
-            setTitle('');
-            return;
-        }
-
-        fetch(`/api/mp3/getVideoTitle?url=${url}`)
-            .then(response => {
-                if (response.ok)
-                    return response.json();
-            }).then(data => {
-                setTitle(data.title);
-            })
-            .catch(error => {
-                console.error('error fetching data: ', error);
-            })
-
-        setRevealed(true);
-
-    }, [url]);
 
     useEffect(() => {
 
@@ -96,7 +75,7 @@ export default function SubmissionForm() {
         
             const a = document.createElement('a');
             a.href = fileLink;
-            a.download = title + '.' + fileName.split('.').pop();
+            a.download = "download" + '.' + fileName.split('.').pop();
     
             document.body.appendChild(a);
             a.click();
@@ -118,19 +97,14 @@ export default function SubmissionForm() {
 
     }, [fileName, title]);
 
-    const Title = ({ title }: {title: string}) => {
+    const Title = ({ title }: {title: string}) => (
 
-        if (title == '')
-            return (
-                <div className='form-title'></div>
-            );
-    
-        return (
-            <div className={`form-title ${isRevealed ? '' : 'show'}`}>
-                {title}
-            </div>
-        );
-    }
+        title == '' ?
+        <div className='form-title'></div> :
+        <div className={`form-title show`}>
+            {title}
+        </div>
+)
 
     const Form = () => {
 
@@ -157,6 +131,24 @@ export default function SubmissionForm() {
                 <div className="content-types">
 
                     <div 
+                        className={`content-type-button bg-red-900 ${isYt ? 'show-button' : ''}`}
+                        onClick={() => {
+                            setIsYt(true);
+                        }}>Youtube</div>
+
+                    <button
+                        className={`content-type-button bg-pink-700 ${isYt ? '' : 'show-button'}`}
+                        onClick={() => {
+                            setIsYt(false);
+                        }}>Instagram</button>
+
+                </div>
+
+                {isYt ?
+                <>
+                <div className="content-types">
+
+                    <div 
                         className={`content-type-button ${isAudio ? 'show-button' : ''}`}
                         onClick={() => {
                             setAudio(true);
@@ -173,8 +165,10 @@ export default function SubmissionForm() {
                 {isAudio ? 
                 <AudioForm url={url} setLoading={setLoading} setFileName={setFileName} setTitle={setTitle} /> :
                 <VideoForm url={url} setLoading={setLoading} setFileName={setFileName} setTitle={setTitle} />}
-
-                <div className="flex justify-center mt-[150px] cursor-crosshair">
+                </> :
+                <IGForm url={url} setLoading={setLoading} setFileName={setFileName} setTitle={setTitle} />}
+                
+                <div className="absolute left-1/2 transform -translate-x-1/2 top-[1000px] cursor-not-allowed">
                     <Image
                         src="https://jipel.law.nyu.edu/wp-content/uploads/2023/03/image-768x386.png"
                         alt="YOU WOULDN'T DOWNLOAD A CAR!!!"

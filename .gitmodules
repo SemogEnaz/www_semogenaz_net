@@ -1,0 +1,3 @@
+[submodule "src/scripts/mp3/IG_graphql_scraper"]
+	path = src/scripts/mp3/IG_graphql_scraper
+	url = https://github.com/SemogEnaz/IG_graphql_scraper.git
