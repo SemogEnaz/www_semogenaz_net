@@ -1,14 +1,15 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import AudioForm from './formAudio';
-import VideoForm from "./formVideo";
-import LoadingForm from "./formLoading";
+import UrlInput from "./formElements/urlInput";
+import AudioForm from './formTypes/formAudio';
+import VideoForm from "./formTypes/formVideo";
+import LoadingForm from "./formTypes/formLoading";
 
 import './form.css'
-import './checkbox.css'
+import './formElements/checkbox.css'
 import Image from 'next/image';
-import IGForm from "./formIG";
+import IGForm from "./formTypes/formIG";
 
 export type FormArgs = {
     url: string, 
@@ -97,6 +98,7 @@ export default function SubmissionForm() {
 
     }, [fileName, title]);
 
+    // Needed for giving error messages to the user
     const Title = ({ title }: {title: string}) => (
 
         title == '' ?
@@ -108,41 +110,13 @@ export default function SubmissionForm() {
 
     const Form = () => {
 
-        const placeholder = 'Paste url here...'; //'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
-
         return (
 
             <div className="form">
 
                 <Title title={title} />
 
-                <div className="flex items-center bg-blue-900 rounded-md p-3 drop-shadow-2xl mb-[30px]">
-                    <div className="text-xl text-white">url:</div>
-                    <input
-                        type="text"
-                        value={url}
-                        placeholder={placeholder}
-                        onChange={(inputEvent) => {
-                            setUrl(inputEvent.target.value);
-                        }}
-                        className="url-input drop-shadow-md" />
-                </div>
-
-                <div className="content-types">
-
-                    <div 
-                        className={`content-type-button bg-red-900 ${isYt ? 'show-button' : ''}`}
-                        onClick={() => {
-                            setIsYt(true);
-                        }}>Youtube</div>
-
-                    <button
-                        className={`content-type-button bg-pink-700 ${isYt ? '' : 'show-button'}`}
-                        onClick={() => {
-                            setIsYt(false);
-                        }}>Instagram</button>
-
-                </div>
+                <UrlInput isYt={isYt} url={url} setUrl={setUrl} setIsYt={setIsYt}/>
 
                 {isYt ?
                 <>

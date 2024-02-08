@@ -5,9 +5,9 @@ import { useEffect, useState } from 'react';
 import { 
     formOptions, checkboxOptions,
     makeCheckboxsRaw, makeCheckboxes, makeDependingCheckboxes 
-} from "./checkbox";
+} from "../formElements/checkbox";
 
-import { isBadUrl, FormArgs } from './form';
+import { isBadUrl, FormArgs } from '../form';
 
 export default function AudioForm({ url, setLoading, setFileName, setTitle }: FormArgs) {
 

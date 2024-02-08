@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
 import { formOptions, checkboxOptions,
-    makeCheckboxsRaw, makeCheckboxes, makeDependingCheckboxes } from "./checkbox";
+    makeCheckboxsRaw, makeCheckboxes, makeDependingCheckboxes } from "../formElements/checkbox";
 
-import { isBadUrl, FormArgs } from "./form";
+import { isBadUrl, FormArgs } from "../form";
 
 export default function VideoForm({ url, setLoading, setFileName, setTitle }: FormArgs) {
 

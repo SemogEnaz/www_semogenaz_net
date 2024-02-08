@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { 
     formOptions, checkboxOptions,
     makeCheckboxsRaw, makeCheckboxes, makeDependingCheckboxes 
-} from "./checkbox";
+} from "../formElements/checkbox";
 
-import { FormArgs } from "./form";
+import { FormArgs } from "../form";
 
 export default function IGForm({ url, setLoading, setFileName, setTitle }: FormArgs) {
     

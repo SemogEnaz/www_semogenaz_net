@@ -151,6 +151,9 @@ input[type="text"]:focus {
     opacity: 0.5;
 
     cursor: pointer;
+
+    transition: background-color 1s ease-in-out,
+        opacity 0.3s ease-in-out;
 }
 
 .content-type-button:hover {
