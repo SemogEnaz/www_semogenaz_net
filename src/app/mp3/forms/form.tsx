@@ -64,7 +64,7 @@ export default function SubmissionForm() {
 
     useEffect(() => {
 
-        if (fileName == '' || title == '') return;
+        if (fileName == '') return;
 
         const deleteContent = () => {
             fetch(`api/mp3/deleteVideo?fileName=${fileName}`);
