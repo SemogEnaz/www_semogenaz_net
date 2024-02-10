@@ -34,6 +34,10 @@ const AudioContext = createContext<{
     | undefined>(undefined) // undefined for default initial state
 const AudioValid = createContext<() => boolean>(() => false);
 
+export const useValidOptions = () => (
+    useContext(AudioValid)
+)
+
 // Returns state for options and it's setter
 export const useAudioState = (): {
     audioOptions: AudioOptions, 
@@ -55,20 +59,33 @@ export const useAudioState = (): {
     }
 };
 
-export const useValidOptions = () => (
-    useContext(AudioValid)
-)
+export const useAudioOptionValues = (): {
+    formatVals: FormatOptions[],
+    embedVals: ThumbnailOptions[],
+    downloadVals: ThumbnailOptions[] } => {
 
-export const useAudioOptionValues = (): string[][] => {
     const formatValues = Object.values(FormatOptions);
     const [ embedValue, thumbnailValue ] = Object.values(ThumbnailOptions);
 
-    return [formatValues, [embedValue], [thumbnailValue]];
+    return {
+        formatVals: formatValues, 
+        embedVals: [embedValue], 
+        downloadVals: [thumbnailValue]
+    };
 }
 
-export const useAudioAttributes = (): string[] => (
-    Object.values(AudioAttrubutes)
-)
+export const useAudioAttributes = (): {
+    formatAttr: AudioAttrubutes,
+    embedAttr: AudioAttrubutes,
+    downloadAttr: AudioAttrubutes } => {
+
+    const [formatAttr, embedAttr, downloadAttr] = Object.values(AudioAttrubutes);
+    return {
+        formatAttr: formatAttr,
+        embedAttr: embedAttr,
+        downloadAttr: downloadAttr
+    };
+}
 
 // This is the component to wrap the part of the ReactDOM tree we want to have the AudioContext
 export default function AudioProvider({ children }: { children: JSX.Element }) {

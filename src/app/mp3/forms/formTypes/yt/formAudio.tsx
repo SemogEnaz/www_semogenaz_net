@@ -9,14 +9,15 @@ import { isBadUrl, apiUrl, FormArgs } from '../../form';
 
 import { 
     useAudioState, useValidOptions,
-    useAudioAttributes, useAudioOptionValues, AudioAttrubutes
+    useAudioAttributes, useAudioOptionValues, 
+    AudioAttrubutes
 } from '../../contexts/AudioContext';
 
 export default function AudioForm({ url, setLoading, setFileName, setTitle }: FormArgs) {
 
     const { audioOptions, setAudioOptions } = useAudioState();
-    const [ formatAttr, embedAttr, downloadAttr ] = useAudioAttributes();
-    const [formatVals, embedVals, downloadVals] = useAudioOptionValues();
+    const { formatAttr, embedAttr, downloadAttr } = useAudioAttributes();
+    const { formatVals, embedVals, downloadVals } = useAudioOptionValues();
 
     const isValidOptions = useValidOptions();
 
