@@ -1,126 +1,82 @@
-import { useEffect, useState } from "react";
-
 import { formOptions, checkboxOptions,
-    makeCheckboxsRaw, makeCheckboxes, makeDependingCheckboxes } from "../formElements/checkbox";
+    makeCheckboxsRaw, makeCheckboxes, makeDependingCheckboxes } from "../../formElements/checkbox";
 
-import { isBadUrl, FormArgs } from "../form";
+import { isBadUrl, FormArgs, apiUrl } from "../../form";
+
+import { 
+    VideoAttributes, useVideoAttributes, useVideoOptionValues, 
+    useVideoState, useValidOptions } from "../../contexts/VideoContext";
 
 export default function VideoForm({ url, setLoading, setFileName, setTitle }: FormArgs) {
 
-    const [videoOptions, setVideoOptions] = useState(() => {
-        return ({
-            'format': '',
-            'thumbnail': '',    // embed, download
-            'subtitles': '',    // embed, ''
-            'chapters': '',     // write, ''
-            'sponsor': '',      // mark, remove
-        })
-    });
+    const { videoOptions, setVideoOptions } = useVideoState();
+    const { formatAttr, subtitleAttr, chapterAttr, sponsorAttr } = useVideoAttributes();
+    const { formatVals, subtitleVals, chapterVals, sponsorVals} = useVideoOptionValues();
+    const isValidOptions = useValidOptions();
 
     const state = {
         options: videoOptions,
         setOptions: setVideoOptions
     };
 
-    const [hasFormat, setHasFormat] = useState(false);
-    const [isSubmit, setSubmit] = useState(false);
-
-    useEffect(() => {
-        const resetOption = (attribute: string) => {
-            setVideoOptions(prev => ({
-                ...prev,
-                [attribute]: ''
-            }));
-        }
-
-        setHasFormat(videoOptions['format'] != '');
-
-        // Reseting depending attributes
-        if (videoOptions['format'] == '') {
-            resetOption('subtitles');
-            resetOption('chapters');
-            resetOption('sponsor');
-        }
-
-    }, [videoOptions['format'], hasFormat]);
-
-    // calling the download api from backend
-    useEffect(() => {
-
-        if (!isSubmit) return;
+    const submit = () => {
 
         if (isBadUrl(url)) {
             setTitle('Invalid url (*____*! )')
             return;
         }
 
-        if (videoOptions['format'] == '') {
+        if (isValidOptions()) {
             setTitle('Invalid Options (X ____ X )')
             return;
         }
 
         const getVideoOptions = () => {
             const isAudio = '&isAudio=false';
-            const fileType = 'format;' + videoOptions['format'];
-            const subtitles = 'subtitles;' + videoOptions['subtitles'];
-            const chapters = 'chapters;' + videoOptions['chapters'];
-            const sponsor = 'sponsor;' + videoOptions['sponsor'];
 
-            return isAudio + '&options=' + encodeURIComponent(
-                fileType + ';' + subtitles + ';' + chapters + ';' + sponsor
-            );
+            const paramStr = 
+                (videoAttr: VideoAttributes): string => `${videoAttr};${videoOptions[videoAttr]}`;
+            const optionsStr =  
+                Object.keys(videoOptions).map(key => paramStr(key as VideoAttributes)).join(';');
+
+            return isAudio + '&options=' + encodeURIComponent(optionsStr);
         }
 
-        let apiUrl = '/api/mp3/downloadVideo?';
-        apiUrl += `url=${encodeURIComponent(url)}`;
+        setLoading({
+            isLoading: true,
+            message: 'Downloading Video'
+        });
 
-        let apiParam = getVideoOptions();
-        apiUrl += apiParam;
-
-        const fetchData = async () => {
-
-            setLoading({
-                isLoading: true,
-                message: 'Downloading Video'
-            });
-
-            try {
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-
-                setFileName(data.fileName);
-            } catch (error) {
+        fetch(apiUrl(getVideoOptions, url))
+            .then(res => res.json())
+            .then(data => data.fileName)
+            .then(fileName => {
+                setFileName(fileName);
                 setLoading({
-                    isLoading: true,
-                    message: error
-                })
-                console.error('Fetch error: ', error);
-            }
-        };
-    
-        fetchData();
-        setSubmit(false);
-
-    }, [isSubmit]);
+                    isLoading: false,
+                    message: ''
+                });
+            });
+    };
 
     const formats = makeCheckboxsRaw(
-        ['.mkv', '.mp4'],
-        ['mkv', 'mp4'],
-        'format');
+        formatVals.map(val => '.' + val),
+        formatVals,
+        formatAttr);
     const formatComponent = makeCheckboxes(
         formats, state);
 
-    const subtitles = makeCheckboxsRaw(['Subtitles'], ['embed'], 'subtitles');
-    const chapters = makeCheckboxsRaw(['Chapters'], ['embed'], 'chapters');
+    const subtitles = makeCheckboxsRaw(['Subtitles'], subtitleVals, subtitleAttr);
+    const chapters = makeCheckboxsRaw(['Chapters'], chapterVals, chapterAttr);
     const subsNchapsComponent = makeDependingCheckboxes(
-        [...subtitles, ...chapters], state, hasFormat);
+        [...subtitles, ...chapters], state, videoOptions.format != '');
 
     const sponsor = makeCheckboxsRaw(
         ['Mark', 'Remove'],
-        ['mark', 'remove'],
-        'sponsor');
+        sponsorVals,
+        sponsorAttr);
     const sponsorComponent = makeDependingCheckboxes(
-        sponsor, state, hasFormat);
+        sponsor, state, videoOptions.format != '');
 
     return (
         <>
@@ -134,9 +90,7 @@ export default function VideoForm({ url, setLoading, setFileName, setTitle }: Fo
             </div>
             <div
                     className='submition-button' 
-                    onClick={() => {
-                        setSubmit(true);
-                    }}>
+                    onClick={submit}>
                     Download
             </div>
             

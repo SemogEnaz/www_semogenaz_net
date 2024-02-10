@@ -1,16 +1,21 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import UrlInput from "./formElements/urlInput";
+
+// subforms
 import AudioForm from './formTypes/yt/formAudio';
 import VideoForm from "./formTypes/yt/formVideo";
+import IGForm from "./formTypes/formIG";
 import LoadingForm from "./formTypes/formLoading";
 
+// elements
 import './form.css';
 import './formElements/checkbox.css';
-import Image from 'next/image';
-import IGForm from "./formTypes/formIG";
+import UrlInput from "./formElements/urlInput";
+
+// contexts
 import AudioProvider from "./contexts/AudioContext";
+import VideoProvider from "./contexts/VideoContext";
 
 export type FormArgs = {
     url: string, 
@@ -150,10 +155,13 @@ export default function SubmissionForm() {
                     <AudioForm url={url} setLoading={setLoading} setFileName={setFileName} setTitle={setTitle} />
                 </AudioProvider>
                 :
-                <VideoForm url={url} setLoading={setLoading} setFileName={setFileName} setTitle={setTitle} />}
+                <VideoProvider>                    
+                    <VideoForm url={url} setLoading={setLoading} setFileName={setFileName} setTitle={setTitle} />
+                </VideoProvider>}
                 </> :
                 <IGForm url={url} setLoading={setLoading} setFileName={setFileName} setTitle={setTitle} />}
                 
+                {/* 
                 <div className="absolute left-1/2 transform -translate-x-1/2 top-[1000px] cursor-not-allowed">
                     <Image
                         src="https://jipel.law.nyu.edu/wp-content/uploads/2023/03/image-768x386.png"
@@ -161,6 +169,8 @@ export default function SubmissionForm() {
                         width={400}
                         height={200} />
                 </div>
+                */}
+                
             </div>
         );
     };
