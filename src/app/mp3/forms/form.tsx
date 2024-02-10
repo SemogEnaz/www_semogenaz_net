@@ -2,14 +2,15 @@
 
 import { useEffect, useState } from "react";
 import UrlInput from "./formElements/urlInput";
-import AudioForm from './formTypes/formAudio';
-import VideoForm from "./formTypes/formVideo";
+import AudioForm from './formTypes/yt/formAudio';
+import VideoForm from "./formTypes/yt/formVideo";
 import LoadingForm from "./formTypes/formLoading";
 
-import './form.css'
-import './formElements/checkbox.css'
+import './form.css';
+import './formElements/checkbox.css';
 import Image from 'next/image';
 import IGForm from "./formTypes/formIG";
+import AudioProvider from "./contexts/AudioContext";
 
 export type FormArgs = {
     url: string, 
@@ -48,6 +49,14 @@ export function isBadUrl(url: string): boolean {
     }
 
     return !isYtUrl(url) || !clean(url);
+}
+
+export const apiUrl = (genUrlOpt: () => string, url: string): string => {
+    const api = '/api/mp3/downloadVideo';
+    const urlQuery = `?url=${encodeURIComponent(url)}`;
+    const optionsQuery = genUrlOpt();
+
+    return api + urlQuery + optionsQuery;
 }
 
 export default function SubmissionForm() {
@@ -137,7 +146,10 @@ export default function SubmissionForm() {
                 </div>
 
                 {isAudio ? 
-                <AudioForm url={url} setLoading={setLoading} setFileName={setFileName} setTitle={setTitle} /> :
+                <AudioProvider>
+                    <AudioForm url={url} setLoading={setLoading} setFileName={setFileName} setTitle={setTitle} />
+                </AudioProvider>
+                :
                 <VideoForm url={url} setLoading={setLoading} setFileName={setFileName} setTitle={setTitle} />}
                 </> :
                 <IGForm url={url} setLoading={setLoading} setFileName={setFileName} setTitle={setTitle} />}
