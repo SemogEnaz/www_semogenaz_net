@@ -7,7 +7,7 @@ import {
 } from "../formElements/checkbox";
 import { useTitle, useUrl } from "../contexts/FormContext";
 
-export default function IGForm({ setLoading, setFileName }) {
+export default function IGForm({ setLoading, setFileNames }) {
     
     const { url, isSafeUrl } = useUrl()!;
     const { setTitle } = useTitle()!;
@@ -40,14 +40,7 @@ export default function IGForm({ setLoading, setFileName }) {
             .then(res => res.json())
             .then(data => data.fileNames)
             .then((fileNames: string[]) => {
-                fileNames.forEach(file => {
-                    const a = document.createElement('a');
-                    a.href = '/mp3/downloads/' + file;
-                    a.download = file;
-                    document.body.appendChild(a);
-                    a.click();
-                    a.remove();
-                });
+                setFileNames(fileNames);
                 setLoading({
                     isLoading: false,
                     message: ''

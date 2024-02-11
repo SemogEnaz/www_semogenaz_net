@@ -19,10 +19,10 @@ export default function handler(req, res) {
     execSync(yt_dlp);
 
     const fileNames = getFileName(code);
-    const fileName = compressFiles(fileNames, code);
+    //const fileName = compressFiles(fileNames, code);
 
-    console.log(`File Downloaded: ${fileName}`);
-    res.status(200).json({ 'fileName': fileName });
+    console.log(`Files Downloaded`);
+    res.status(200).json({ 'fileNames': fileNames });
 }
 
 function compressFiles(fileNames: string[], code: string): string {

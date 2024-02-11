@@ -9,7 +9,7 @@ import {
 import { useUrl } from "../../contexts/FormContext";
 import { useTitle } from "../../contexts/FormContext";
 
-export default function VideoForm({ setLoading, setFileName }) {
+export default function VideoForm({ setLoading, setFileNames }) {
 
     const { videoOptions, setVideoOptions } = useVideoState();
     const { formatAttr, subtitleAttr, chapterAttr, sponsorAttr } = useVideoAttributes();
@@ -26,12 +26,12 @@ export default function VideoForm({ setLoading, setFileName }) {
 
     const submit = () => {
 
-        if (isSafeUrl(url)) {
+        if (!isSafeUrl(url)) {
             setTitle('Invalid url')
             return;
         }
 
-        if (isValidOptions()) {
+        if (!isValidOptions()) {
             setTitle('Invalid Options')
             return;
         }
@@ -54,9 +54,9 @@ export default function VideoForm({ setLoading, setFileName }) {
 
         fetch(apiUrl(getVideoOptions, url))
             .then(res => res.json())
-            .then(data => data.fileName)
-            .then(fileName => {
-                setFileName(fileName);
+            .then(data => data.fileNames)
+            .then(fileNames => {
+                setFileNames(fileNames);
                 setLoading({
                     isLoading: false,
                     message: ''

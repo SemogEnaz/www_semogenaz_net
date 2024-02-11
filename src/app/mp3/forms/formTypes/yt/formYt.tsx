@@ -4,7 +4,7 @@ import AudioForm from "./formAudio";
 import VideoProvider from "../../contexts/VideoContext";
 import VideoForm from "./formVideo";
 
-export default function YtForm({setLoading, setFileName}): JSX.Element {
+export default function YtForm({setLoading, setFileNames}): JSX.Element {
 
     const { isAudio, setIsAudio } = useMediaContext()!;
 
@@ -28,11 +28,11 @@ export default function YtForm({setLoading, setFileName}): JSX.Element {
 
         {isAudio ?
         <AudioProvider>
-            <AudioForm setLoading={setLoading} setFileName={setFileName} />
+            <AudioForm setLoading={setLoading} setFileNames={setFileNames} />
         </AudioProvider>
         :
         <VideoProvider>                    
-            <VideoForm setLoading={setLoading} setFileName={setFileName} />
+            <VideoForm setLoading={setLoading} setFileNames={setFileNames} />
         </VideoProvider>}
         </> 
     )

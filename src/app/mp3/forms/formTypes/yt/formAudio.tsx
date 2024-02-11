@@ -16,7 +16,7 @@ import {
     AudioAttrubutes
 } from '../../contexts/AudioContext';
 
-export default function AudioForm({ setLoading, setFileName }) {
+export default function AudioForm({ setLoading, setFileNames }) {
 
     const { audioOptions, setAudioOptions } = useAudioState();
     const { formatAttr, embedAttr, downloadAttr } = useAudioAttributes();
@@ -64,9 +64,9 @@ export default function AudioForm({ setLoading, setFileName }) {
 
         fetch(apiUrl(getAudioParam, url))
             .then(response => response.json())
-            .then(data => data.fileName)
-            .then((fileName: string) => {
-                setFileName(fileName);
+            .then(data => data.fileNames)
+            .then((fileNames: string) => {
+                setFileNames(fileNames);
                 setLoading({
                     isLoading: false,
                     message: '',

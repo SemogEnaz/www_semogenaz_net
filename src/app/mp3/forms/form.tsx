@@ -28,43 +28,33 @@ export default function SubmissionForm() {
         isLoading: false,
         message: ''
     }));
-    const [fileName, setFileName] = useState('');
+    const [fileNames, setFileNames] = useState<string[]>([]);
 
     useEffect(() => {
 
-        if (fileName == '') return;
+        if (fileNames.length == 0) return;
 
-        const deleteContent = () => {
+        const deleteContent = (fileName: string) => {
             fetch(`api/mp3/deleteVideo?fileName=${fileName}`);
         };
-    
-        const downloadContent = () => {
-
-            const fileLink = `/mp3/downloads/${fileName}`;
-
+        
+        fileNames.forEach((fileName: string) => {
             const a = document.createElement('a');
-            a.href = fileLink;
+            a.href = `/mp3/downloads/${fileName}`;
             a.download = "download" + '.' + fileName.split('.').pop();
-    
+
             document.body.appendChild(a);
             a.click();
             a.remove();
         
             setTimeout(() => {
-                deleteContent();
+                deleteContent(fileName);
             }, 10 * 60000);
-        };
-
-        downloadContent();
-
-        setLoading({
-            isLoading: false,
-            message: ''
         });
 
-        setFileName('');
+        setFileNames([]);
 
-    }, [fileName]);
+    }, [fileNames]);
 
     const Form = () => {
         const { isYt } = useSource()!;
@@ -77,10 +67,10 @@ export default function SubmissionForm() {
                 {isYt ?
 
                     <MediaProvider>
-                        <YtForm setLoading={setLoading} setFileName={setFileName} /> 
+                        <YtForm setLoading={setLoading} setFileNames={setFileNames} /> 
                     </MediaProvider> :
 
-                    <IGForm setLoading={setLoading} setFileName={setFileName} />}
+                    <IGForm setLoading={setLoading} setFileNames={setFileNames} />}
                 
                 {/* Easter egg to be reinstated once online store mock is made :(
                 <div className="absolute left-1/2 transform -translate-x-1/2 top-[1000px] cursor-not-allowed">
