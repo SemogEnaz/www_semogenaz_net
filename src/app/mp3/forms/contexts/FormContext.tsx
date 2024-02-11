@@ -43,7 +43,7 @@ export function TitleProvider({ children }: { children: JSX.Element}) {
 
 const isYtUrl = (url: string): boolean => {
 
-    const isYtVideo = (url: string) => {
+    const isYtVideo = (url: string): boolean => {
         const urlStartDesktop = 'https://www.youtube.com/watch?v=';
         const urlStartMoble = 'https://youtu.be/'
         const isDomain = url.includes(urlStartDesktop) || url.includes(urlStartMoble);
@@ -66,11 +66,11 @@ const isYtUrl = (url: string): boolean => {
         return isYtVideo(url) && !isYtPlaylist(url);
     }
 
-    const clean = (url: string) => {
+    const clean = (url: string): boolean => {
         return !url.includes(';') && !url.includes(' ') && !url.includes(';');
     }
 
-    return !isYtUrl(url) || !clean(url);
+    return isYtUrl(url) && clean(url);
 }
 
 const isIgUrl = (url: string): boolean => {
