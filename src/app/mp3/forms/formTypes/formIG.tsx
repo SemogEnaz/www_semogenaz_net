@@ -5,12 +5,12 @@ import {
     formOptions, checkboxOptions,
     makeCheckboxsRaw, makeCheckboxes, makeDependingCheckboxes 
 } from "../formElements/checkbox";
+import { useTitle, useUrl } from "../contexts/FormContext";
 
-import { FormArgs } from "../form";
-
-export default function IGForm({ url, setLoading, setFileName, setTitle }: FormArgs) {
+export default function IGForm({ setLoading, setFileName }) {
     
-    const [isSubmit, setSubmit] = useState(false);
+    const { url, isSafeUrl } = useUrl()!;
+    const { setTitle } = useTitle()!;
     const [source, setSource] = useState({
         'source': '',
         'downloadType': 'direct'
@@ -21,12 +21,20 @@ export default function IGForm({ url, setLoading, setFileName, setTitle }: FormA
         setOptions: setSource
     }
     
-    useEffect(() => {
-
-        if (isSubmit == false) return
+    const submit = () => {
         
+        if (!isSafeUrl(url)) {
+            setTitle('Invalid url');
+            return;
+        }
+
         const apiURL = 
             `/api/mp3/getPost?url=${encodeURIComponent(url)}&downloadType=` + source.downloadType;
+
+        setLoading({
+            isLoading: true,
+            message: 'Downloading Post'
+        });
 
         fetch(apiURL)
             .then(res => res.json())
@@ -40,9 +48,12 @@ export default function IGForm({ url, setLoading, setFileName, setTitle }: FormA
                     a.click();
                     a.remove();
                 });
-                setSubmit(false);
+                setLoading({
+                    isLoading: false,
+                    message: ''
+                });
             });
-    }, [isSubmit, url])
+    };
 
     const content = makeCheckboxsRaw(
         ['Post'],
@@ -70,9 +81,7 @@ export default function IGForm({ url, setLoading, setFileName, setTitle }: FormA
             </div>
         <div
             className='submition-button' 
-            onClick={() => {
-                setSubmit(true);
-            }}>
+            onClick={submit}>
             Download
         </div>
         </>

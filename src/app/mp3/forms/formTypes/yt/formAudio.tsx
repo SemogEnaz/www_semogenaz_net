@@ -5,7 +5,10 @@ import {
     makeCheckboxsRaw, makeCheckboxes, makeDependingCheckboxes 
 } from "../../formElements/checkbox";
 
-import { isBadUrl, apiUrl, FormArgs } from '../../form';
+import { apiUrl } from '../../form';
+
+import { useUrl } from "../../contexts/FormContext";
+import { useTitle } from "../../contexts/FormContext";
 
 import { 
     useAudioState, useValidOptions,
@@ -13,24 +16,26 @@ import {
     AudioAttrubutes
 } from '../../contexts/AudioContext';
 
-export default function AudioForm({ url, setLoading, setFileName, setTitle }: FormArgs) {
+export default function AudioForm({ setLoading, setFileName }) {
 
     const { audioOptions, setAudioOptions } = useAudioState();
     const { formatAttr, embedAttr, downloadAttr } = useAudioAttributes();
     const { formatVals, embedVals, downloadVals } = useAudioOptionValues();
-
     const isValidOptions = useValidOptions();
+
+    const { url, isSafeUrl } = useUrl()!;
+    const { setTitle } = useTitle()!;
 
     const states = { options: audioOptions, setOptions: setAudioOptions };
 
     const isValid = (): boolean => {
-        if (isBadUrl(url)) {
-            setTitle('Invalid url (-____- )');
+        if (isSafeUrl(url)) {
+            setTitle('Invalid url');
             return false;
         }
 
         if (!isValidOptions()) {
-            setTitle('Invalid options (0____0 )');
+            setTitle('Invalid options');
             return false;
         }
 

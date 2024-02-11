@@ -1,18 +1,23 @@
 import { formOptions, checkboxOptions,
     makeCheckboxsRaw, makeCheckboxes, makeDependingCheckboxes } from "../../formElements/checkbox";
 
-import { isBadUrl, FormArgs, apiUrl } from "../../form";
+import { apiUrl } from "../../form";
 
 import { 
     VideoAttributes, useVideoAttributes, useVideoOptionValues, 
     useVideoState, useValidOptions } from "../../contexts/VideoContext";
+import { useUrl } from "../../contexts/FormContext";
+import { useTitle } from "../../contexts/FormContext";
 
-export default function VideoForm({ url, setLoading, setFileName, setTitle }: FormArgs) {
+export default function VideoForm({ setLoading, setFileName }) {
 
     const { videoOptions, setVideoOptions } = useVideoState();
     const { formatAttr, subtitleAttr, chapterAttr, sponsorAttr } = useVideoAttributes();
     const { formatVals, subtitleVals, chapterVals, sponsorVals} = useVideoOptionValues();
     const isValidOptions = useValidOptions();
+
+    const { url, isSafeUrl } = useUrl()!;
+    const { setTitle } = useTitle()!;
 
     const state = {
         options: videoOptions,
@@ -21,13 +26,13 @@ export default function VideoForm({ url, setLoading, setFileName, setTitle }: Fo
 
     const submit = () => {
 
-        if (isBadUrl(url)) {
-            setTitle('Invalid url (*____*! )')
+        if (isSafeUrl(url)) {
+            setTitle('Invalid url')
             return;
         }
 
         if (isValidOptions()) {
-            setTitle('Invalid Options (X ____ X )')
+            setTitle('Invalid Options')
             return;
         }
 
