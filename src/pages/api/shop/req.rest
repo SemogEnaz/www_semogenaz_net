@@ -1,0 +1,32 @@
+# Get the data
+GET http://localhost:3000/api/shop/user
+
+### Create
+POST http://localhost:3000/api/shop/user?action=create
+Content-Type: application/json
+
+{
+    "userName": "Zane",
+    "email": "semogenaz@gmail.com",
+    "password": "123456789"
+}
+
+### Delete
+POST http://localhost:3000/api/shop/user?action=delete
+Content-Type: application/json
+
+{
+    "userName": "Zane",
+    "email": "semogenaz@gmail.com",
+    "password": "123456789"
+}
+
+### SignIn
+POST http://localhost:3000/api/shop/user?action=signIn
+Content-Type: application/json
+
+{
+    "userName": "Zane",
+    "email": "semogenaz@gmail.com",
+    "password": "123456789"
+}
