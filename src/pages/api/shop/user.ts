@@ -1,7 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
-import mysql from 'mysql2/promise';
+import mysql, { FieldPacket } from 'mysql2/promise';
 import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
+
+dotenv.config()
 
 const HUNTER_API_KEY = '3d0356141064fb9174b41263550e2194d51ee4d5';
 
@@ -9,7 +12,16 @@ type User = {
     userName: string,
     email: string,
     password: string
-}
+};
+
+enum ACOUNT_ACTION {
+    EXIST = 'exist',
+    CREATED = 'created',
+    DELETED = 'deleted',
+    ERROR = 'error'
+};
+
+const { EXIST, ERROR, CREATED } = ACOUNT_ACTION
 
 dotenv.config();
 // https://sidorares.github.io/node-mysql2/docs
@@ -23,21 +35,49 @@ const connection = mysql.createPool({
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
-    // TODO: For debugging remove later!!!
+    const { action } = req.query;
+
     if ( req.method == 'GET' ) {
-        const [ results ] = await connection.query('SELECT * FROM users');
-        res.status(200).json( results );
+        
+        if ( action == 'verify') {
+            const authHeader = req.headers['authorization']
+            const token = authHeader && authHeader.split(' ').pop();
+            if (token == null) return res.status(500).end();
+    
+            if (authSession( token )) {
+                // Setting cookie to header
+                //res.setHeader('Set-Cookie', `token=${token}; HttpOnly; Path=/; SameSite=Strict; Secure; Max-Age=${60 * 60 * 24}`);
+                return res.status(200).json({ message: 'Token verified!'})
+            }
+                res.status(500).end();
+
+        } else {
+            // TODO: For debugging remove later!!!
+            const [ results ] = await connection.query('SELECT * FROM users');
+            return res.status(200).json( results );
+        }
     };
 
     if (req.method != 'POST') 
         return res.status(405).end('Method not allowed');
 
-    const { action } = req.query;
     const { userName, email, password } = req.body;
     const isUndefined = !action || !userName || !email || !password;
 
-    if ( isUndefined )
-        return res.status(400).end('Query error');
+    if ( isUndefined ) {
+        
+        [   // Returning name of value which was not set
+            ['action query', action],
+            ['userName', userName], 
+            ['email', email], 
+            ['password', password]
+        ].forEach(([type, value]) => {
+            if (!value) 
+                console.log(`${type} was not provided in api call!`);
+        });
+
+        res.status(400).end('Query error');
+    }
 
     const user = {
         userName: userName!,
@@ -46,11 +86,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     };
 
     if (action == 'create') {
-        await createUser( user ) ?
-        res.status(201).json({ 
-            message: `Account Created: ${user.email}` }) :
-        res.status(500).end(
-            `Account Creation Failed ${user.email}`);
+
+        const status = await createUser( user );
+        if (status == CREATED)
+            res.status(201).json({ 
+                message: `Account Created: ${user.email}` });
+
+        if (status == EXIST)
+            res.status(500).json({ 
+                message: `Email already in use: ${user.email}` });
+
+        res.status(500).json({
+            message: `Account Creation Failed ${user.email}`});
 
     } else if (action == 'delete') {
         await deleteUser( user ) ?
@@ -60,9 +107,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             `Account Deletion Failed ${user.email}`);
 
     } else if ( action == 'signIn' ) {
-        await signInUser( user ) ?
-        res.status(200).json({ 
-            message: `Account Signed-In ${user.email}` }) :
+        const token = await signInUser( user );
+        if (token)
+            res.status(200).json({ 
+                message: `Account Signed-In ${user.email}`,
+                Token: token
+            })
         res.status(500).end(
             `Account Signed-In Failed ${user.email}`);
     }
@@ -111,22 +161,22 @@ const comparePwd = async (plainText: string, hash: string): Promise<boolean> => 
  * @param user User data from front end: name, email, plain text password
  * @returns boolean representing process success of failure of process
  */
-async function createUser(user: User): Promise<boolean> {
+async function createUser(user: User): Promise<ACOUNT_ACTION> {
 
     // Check if user account exists
-    if (await getUser(user.email)) return false;
+    if (await getUser(user.email)) return EXIST;
 
     // Verify email Syntax
     // https://stackoverflow.com/a/9204568
     const regex = new RegExp('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$');
-    if (!regex.test(user.email)) return false;
+    if (!regex.test(user.email)) return ERROR;
 
     // Verify email active?
     // if (!verifyEmail()) return false;
 
     // Encrypt password
     user.password = await encrypt(user.password)
-    if (!user.password) return false;
+    if (!user.password) return ERROR;
 
     // Add user to db
     connection.query(
@@ -135,7 +185,7 @@ async function createUser(user: User): Promise<boolean> {
         [user.userName, user.email, user.password]
     );
 
-    return true;
+    return CREATED;
 }
 
 async function deleteUser(user: User): Promise<boolean> {
@@ -154,12 +204,34 @@ async function deleteUser(user: User): Promise<boolean> {
     return true;
 }
 
-async function signInUser(user: User): Promise<boolean> {
+async function signInUser(user: User): Promise<string> {
 
     const userInDb = await getUser(user.email);
-    if (!userInDb) return false;
+    if (!userInDb) return '';
 
-    return comparePwd(
-        user.password, userInDb.password
-    );
+    const invalidPassword = !comparePwd(user.password, userInDb.password);
+    if (invalidPassword) return '';
+
+    const secret = process.env.JWT_SECRET!;
+    const payload: any = user;
+    // Valid for a day
+    payload.iat = Math.floor(Date.now() / 1000)
+    payload.exp = payload.iat + (60 * 60 * 24)
+
+    try {
+        return jwt.sign(payload, secret);
+    } catch {
+        console.log(`Error generating token for ${user.email}`);
+        return '';
+    }
+}
+
+function authSession(token: string): boolean {
+
+    try {
+        jwt.verify(token, process.env.JWT_SECRET!);
+    } catch {
+        return false;
+    }
+    return true;
 }

@@ -1,0 +1,110 @@
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.col {
+    flex-direction: column;
+}
+
+.row {
+    flex-direction: row;
+}
+
+.nav-bar {
+    height: 60px;
+    width: 100%;
+
+    padding: 20px;
+
+    background-color: purple;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sign-in-window {
+
+    background-color: green;
+    border-radius: 8px;
+
+    position: absolute;
+    left: 50%;
+    top: 300px;
+    transform: translate(-50%, -50%);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 40%;
+
+    padding: 30px;
+}
+
+.sign-in-button {
+
+    background-color: white;
+    color: purple;
+
+    text-align: center;
+    text-justify: center;
+}
+
+.form-button {
+    font-weight: 600;
+
+    transition: text-shadow 0.2s ease-in-out;
+}
+
+.form-button:hover {
+    text-shadow: 0 0 2px rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+}
+
+form {
+    margin: 20px 0;
+}
+
+h1 {
+    font-weight: 600;
+    font-size: xx-large;
+}
+
+input {
+    color: black;
+    margin-bottom: 20px;
+    border-radius: 3px;
+    padding: 0 5px;
+}
+
+input:focus {
+    outline: none;
+    border: none;
+}
+
+button {
+    height: 30px;
+    min-width: 90px;
+    padding: 0 10px;
+
+    border-radius: 5px;
+
+    font-weight: 600;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+    transform: translate(0px, 0px);
+
+    transition: box-shadow 0.15s, transform 0.15s;
+}
+
+button:hover {
+    transform: translate(0px, -1px);
+}
+
+button:active {
+    box-shadow: none;
+    transform: translate(0px, 0px);
+}
