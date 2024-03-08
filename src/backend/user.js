@@ -1,29 +1,22 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
-import mysql, { FieldPacket } from 'mysql2/promise';
+import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 
-dotenv.config()
-
-const HUNTER_API_KEY = '3d0356141064fb9174b41263550e2194d51ee4d5';
-
-type User = {
-    userName: string,
-    email: string,
-    password: string
+const ACOUNT_ACTION = {
+    EXIST: 'exist',
+    CREATED: 'created',
+    DELETED: 'deleted',
+    ERROR: 'error'
 };
 
-enum ACOUNT_ACTION {
-    EXIST = 'exist',
-    CREATED = 'created',
-    DELETED = 'deleted',
-    ERROR = 'error'
-};
-
-const { EXIST, ERROR, CREATED } = ACOUNT_ACTION
+const { EXIST, ERROR, CREATED } = ACOUNT_ACTION;
 
 dotenv.config();
+
+if (!process.env.MYSQL_HOST)
+    console.log('Please place .env file in root of proj with server.js file')
+
 // https://sidorares.github.io/node-mysql2/docs
 // https://www.youtube.com/watch?v=Hej48pi_lOc
 const connection = mysql.createPool({
@@ -33,7 +26,7 @@ const connection = mysql.createPool({
     database: process.env.MYSQL_DATABASE,
 });
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function user(req, res) {
 
     const { action } = req.query;
 
@@ -56,7 +49,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             const [ results ] = await connection.query('SELECT * FROM users');
             return res.status(200).json( results );
         }
-    };
+    }
 
     if (req.method != 'POST') 
         return res.status(405).end('Method not allowed');
@@ -80,9 +73,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const user = {
-        userName: userName!,
-        email: email!,
-        password: password!
+        userName: userName,
+        email: email,
+        password: password
     };
 
     if (action == 'create') {
@@ -118,7 +111,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 }
 
-const encrypt = async (data: string): Promise<string> => {
+const encrypt = async (data) => {
 
     // https://www.youtube.com/watch?v=Ud5xKCYQTjM
     try {
@@ -129,16 +122,16 @@ const encrypt = async (data: string): Promise<string> => {
     }
 }
 
-const verifyEmail = async (userEmail: string): Promise<boolean> => {
+const verifyEmail = async (userEmail) => {
 
-    const api = `https://api.hunter.io/v2/email-verifier?email=${userEmail}&api_key=${HUNTER_API_KEY}`;
+    const api = `https://api.hunter.io/v2/email-verifier?email=${userEmail}&api_key=${process.env.HUNTER_API_KEY}`;
     const res = await fetch(api);
 
     return true;
 }
 
-const getUser = async (userEmail: string): Promise<User | undefined> => {
-    const [ user ]: [User[]] = await connection.query(
+const getUser = async (userEmail) => {
+    const [ user ] = await connection.query(
         `select * from users where email = ? limit 1`,
         userEmail
     );
@@ -146,7 +139,7 @@ const getUser = async (userEmail: string): Promise<User | undefined> => {
     return user.length > 0 ? user[0] : undefined;
 };
 
-const comparePwd = async (plainText: string, hash: string): Promise<boolean> => {
+const comparePwd = async (plainText, hash) => {
     try {
         if (await bcrypt.compare(plainText, hash)) 
             return true;
@@ -161,7 +154,7 @@ const comparePwd = async (plainText: string, hash: string): Promise<boolean> => 
  * @param user User data from front end: name, email, plain text password
  * @returns boolean representing process success of failure of process
  */
-async function createUser(user: User): Promise<ACOUNT_ACTION> {
+async function createUser(user) {
 
     // Check if user account exists
     if (await getUser(user.email)) return EXIST;
@@ -188,7 +181,7 @@ async function createUser(user: User): Promise<ACOUNT_ACTION> {
     return CREATED;
 }
 
-async function deleteUser(user: User): Promise<boolean> {
+async function deleteUser(user) {
 
     const userInDB = await getUser(user.email);
     if (!userInDB) return false;
@@ -204,7 +197,7 @@ async function deleteUser(user: User): Promise<boolean> {
     return true;
 }
 
-async function signInUser(user: User): Promise<string> {
+async function signInUser(user) {
 
     const userInDb = await getUser(user.email);
     if (!userInDb) return '';
@@ -212,8 +205,8 @@ async function signInUser(user: User): Promise<string> {
     const invalidPassword = !comparePwd(user.password, userInDb.password);
     if (invalidPassword) return '';
 
-    const secret = process.env.JWT_SECRET!;
-    const payload: any = user;
+    const secret = process.env.JWT_SECRET;
+    const payload = user;
     // Valid for a day
     payload.iat = Math.floor(Date.now() / 1000)
     payload.exp = payload.iat + (60 * 60 * 24)
@@ -226,10 +219,10 @@ async function signInUser(user: User): Promise<string> {
     }
 }
 
-function authSession(token: string): boolean {
+function authSession(token) {
 
     try {
-        jwt.verify(token, process.env.JWT_SECRET!);
+        jwt.verify(token, process.env.JWT_SECRET);
     } catch {
         return false;
     }
